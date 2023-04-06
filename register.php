@@ -13,7 +13,7 @@
     $chk_res = mysqli_query($db,$chk_sql);
 
 	$encryptedpass = password_hash($password,PASSWORD_BCRYPT);
-	$insert_sql = "INSERT INTO tbl_user (username,name,email,password) VALUES ( '$username','$name','$email','$encryptedpass' ) " ;
+	$insert_sql = "INSERT INTO tbl_gst_case_user (username,name,email,password) VALUES ( '$username','$name','$email','$encryptedpass' ) " ;
 	//echo $insert_sql;exit;
 	$inserd_res = mysqli_query($db,$insert_sql);
 

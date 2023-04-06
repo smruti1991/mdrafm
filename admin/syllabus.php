@@ -3,8 +3,8 @@
 
 
 <head>
-    <?php 
-    
+    <?php
+
     include('header_link.php');
     include('../config.php');
     include 'database.php';
@@ -15,8 +15,7 @@
 <body class="user-profile">
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <div class="wrapper ">
@@ -32,7 +31,7 @@
             </div>
 
 
-            <div class="content" style="margin-top: 50px;" >
+            <div class="content" style="margin-top: 50px;">
 
                 <div class="row">
                     <div class="col-md-4">
@@ -40,8 +39,7 @@
                     </div>
                     <div class="col-md-6">
                         <!-- Modal -->
-                        <div class="modal fade" id="termModal" tabindex="-1" aria-labelledby="termModalLabel"
-                            aria-hidden="true">
+                        <div class="modal fade" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content" style="width:200%; margin:20px -150px">
                                     <div class="modal-header">
@@ -53,10 +51,40 @@
                                     <div class="modal-body">
 
                                         <form method="post" id="frm_syllabus">
-
                                             <div class="row">
-                                                <div class="col-md-2">
+
+                                                <div class="col-md-3">
+                                                     <label><strong>Tranning Type</strong></label>
+                                                   
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                      <div class="form-group">
+                                                        <select class="custom-select mr-sm-2" id="trng_type" name="trng_type">
+                                                            <option value="0" selected>Select Type</option>
+                                                            <?php
+                                                            $db = new Database();
+                                                            $count = 0;
+                                                            $db->select('tbl_training_type', "*", null, "status = 1", null, null);
+                                                            // print_r( $db->getResult());
+                                                            foreach ($db->getResult() as $row) {
+                                                                //print_r($row);
+                                                                $count++
+                                                            ?>
+                                                                <option value="<?php echo $row['id'] ?>">
+                                                                    <?php echo $row['type'] ?>
+                                                                </option>
+
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                        <small></small>
+                                                    </div>
                                                 </div>
+                                            </div>
+                                            <div class="row">
+                                               
 
                                                 <div class="col-md-3">
 
@@ -65,9 +93,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <textarea class="form-control" name="descr" id="descr"
-                                                            placeholder="Enter Syllabus Description" rows="3"
-                                                            style="border: 1px solid #e3e3e3;border-radius:5px;" autocomplete="off" required></textarea>
+                                                        <textarea class="form-control" name="descr" id="descr" placeholder="Enter Syllabus Description" rows="3" style="border: 1px solid #e3e3e3;border-radius:5px;" autocomplete="off" required></textarea>
                                                         <small></small>
                                                     </div>
                                                 </div>
@@ -79,9 +105,7 @@
                                     </div>
                                     <div class="modal-footer">
 
-                                        <button type="submit" class="btn btn-primary" name="submit" value="Save"
-                                            id="save"
-                                            onclick="add('Syllabus','frm_syllabus','tbl_sylabus_master')">Save</button>
+                                        <button type="submit" class="btn btn-primary" name="submit" value="Save" id="save" onclick="add('Syllabus','frm_syllabus','tbl_sylabus_master')">Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +113,7 @@
 
                     </div>
                     <div class="col-md-2">
-                       
+
                     </div>
                 </div>
                 <div class="row">
@@ -98,65 +122,65 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row">
-                                    <div class="col-md-4">  <h4 class="card-title">Syllabus Master</h4></div>
+                                    <div class="col-md-4">
+                                        <h4 class="card-title">Syllabus Master</h4>
+                                    </div>
                                     <div class="col-md-6"></div>
                                     <div class="col-md-2">
-                                    <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#termModal"  value="Add New">
+                                        <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#termModal" value="Add New">
                                     </div>
                                 </div>
-                              
-                               
+
+
                             </div>
                             <div class="card-body">
-                                <div id="term2" class=" table table-responsive table-striped table-hover" style="width:65%;margin:0px auto" >
+                                <div id="term2" class=" table table-responsive table-striped table-hover" style="width:65%;margin:0px auto">
                                     <table class=" term table">
                                         <thead class="" style="background: #315682;color:#fff;font-size: 11px;">
 
                                             <th style="">Sl No</th>
 
                                             <th style="text-align:center;">Description</th>
+                                            <th style="text-align:center;">Tranning Type</th>
                                             <th style="text-align:center;">Action</th>
 
 
 
                                         </thead>
                                         <tbody>
-                                            <?php 
-                               
-                               $db = new Database();
-                               $count = 0;
-                               $db->select('tbl_sylabus_master',"*",null,'status=1',null,null);
-                              // print_r( $db->getResult());
-                               foreach($db->getResult() as $row){
-                                   //print_r($row);
-                                   $count++
-                                   ?>
-                                            <tr>
-                                                <td><?php echo $count; ?></td>
+                                            <?php
+
+                                            $db = new Database();
+                                            $count = 0;
+                                            $db->select('tbl_sylabus_master', "s.*,t.type", ' s JOIN tbl_training_type t ON s.trng_type =t.id', 's.status=1', null, null);
+                                            // print_r( $db->getResult());
+                                            foreach ($db->getResult() as $row) {
+                                                //print_r($row);
+                                                $count++
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $count; ?></td>
 
 
-                                                <td><?php echo $row['descr']; ?> </td>
-
+                                                    <td><?php echo $row['descr']; ?> </td>
+                                                    <td>
+                                                      <?php echo $row['type']; ?>
+                                                    </td>
 
                                                     <td style="text-align:center;">
 
 
-                                                        <a href="#" style="color:#4164b3" class="edit"
-                                                            id="<?php echo $row['id']; ?>" onclick="edit(this.id)"><i
-                                                                class="far fa-edit " style="font-size:1.5rem;"></i></a>
+                                                        <a href="#" style="color:#4164b3" class="edit" id="<?php echo $row['id']; ?>" onclick="edit(this.id)"><i class="far fa-edit " style="font-size:1.5rem;"></i></a>
                                                         &nbsp;
-                                                        <a href="#" style="color:#e50c0c" id="<?php echo $row['id']; ?>"
-                                                            onclick="cnfBox(<?php echo $row['id']; ?>)"><i
-                                                                class="far fa-trash-alt "
-                                                                style="font-size:1.5rem;"></i></i></a><br>
+                                                        <a href="#" style="color:#e50c0c" id="<?php echo $row['id']; ?>" onclick="cnfBox(<?php echo $row['id']; ?>)"><i class="far fa-trash-alt " style="font-size:1.5rem;"></i></i></a><br>
 
                                                     </td>
-                                            </tr>
+                                                </tr>
                                             <?php
-                               }
-                      
-                               
-                              ?>
+                                            }
+
+
+                                            ?>
 
                                         </tbody>
                                     </table>
@@ -179,7 +203,7 @@
 
     </div>
 
-   
+
 
     <!-- msgBox Modal Modal HTML -->
     <div id="cnfModal" class="modal fade">
@@ -237,34 +261,34 @@
 
 <script type="text/javascript">
     const desclEl = document.querySelector('#descr');
-   // checkTextField(desclEl);
-$('#term_id').on('change', function() {
-    var term_id = $(this).val();
-    // alert(term_id);
-   
-    $.ajax({
-        type: "POST",
-        url: "ajax_master.php",
+    // checkTextField(desclEl);
+    $('#term_id').on('change', function() {
+        var term_id = $(this).val();
+        // alert(term_id);
 
-        data: {
-            term_id: term_id,
-            table: "tbl_paper_master",
-            action: "select"
-        },
-        success: function(res) {
-            //console.log(res);
-            $('#paper_id').html(res);
-        }
+        $.ajax({
+            type: "POST",
+            url: "ajax_master.php",
+
+            data: {
+                term_id: term_id,
+                table: "tbl_paper_master",
+                action: "select"
+            },
+            success: function(res) {
+                //console.log(res);
+                $('#paper_id').html(res);
+            }
+        })
+
     })
 
-})
+    function add(str, frm, tbl) {
 
-function add(str, frm, tbl) {
+        var update_id = $('#update_id').val();
 
-    var update_id = $('#update_id').val();
-
-     if( checkTextField(desclEl)){
-        $.ajax({
+        if (checkTextField(desclEl)) {
+            $.ajax({
                 type: "POST",
                 url: "ajax_master.php",
 
@@ -283,93 +307,93 @@ function add(str, frm, tbl) {
                     }
                 }
             })
-     }
-           
-    
+        }
 
-}
 
-function edit(id) {
-
-$.ajax({
-    type: "POST",
-    url: "ajax_master.php",
-    dataType: "json",
-    data: {
-        action: "edit",
-        table: "tbl_sylabus_master",
-        edit_id: id
-
-    },
-    success: function(res) {
-        console.log(res);
-        res.map((data) => {
-
-                $('#update_id').val(data.id);
-                $('#descr').val(data.descr);
-               
-
-                $('#save').html('Update');
-                $('#save').attr('id', 'update');
-                $('#termModal').modal('show');
-            }
-
-        )
 
     }
-})
-}
 
-function cnfBox(id) {
-    //alert(id);
-    $('#m_footer').empty();
-    var html =
-        `<input type="button" class="btn btn-danger btn-dlt" value="Delete" onclick="delete_record(${id},'tbl_sylabus_master')" />`;
-    $('#m_footer').append(html);
-    $('#cnfModal').modal('show');
-}
+    function edit(id) {
 
-function delete_record(id, tbl) {
+        $.ajax({
+            type: "POST",
+            url: "ajax_master.php",
+            dataType: "json",
+            data: {
+                action: "edit",
+                table: "tbl_sylabus_master",
+                edit_id: id
 
-    $.ajax({
-        type: "POST",
-        url: "ajax_master.php",
-        data: {
+            },
+            success: function(res) {
+                console.log(res);
+                res.map((data) => {
 
-            action: "delete",
-            id: id,
-            table: tbl
-        },
-        success: function(res) {
-            console.log(res);
-            if (res == "success") {
-                sessionStorage.message = "record deleted successfully";
-                sessionStorage.type = "success";
-                location.reload();
+                        $('#update_id').val(data.id);
+                        $('#descr').val(data.descr);
+
+
+                        $('#save').html('Update');
+                        $('#save').attr('id', 'update');
+                        $('#termModal').modal('show');
+                    }
+
+                )
+
             }
-        }
-    })
-}
+        })
+    }
 
-function send_record(id, tbl) {
+    function cnfBox(id) {
+        //alert(id);
+        $('#m_footer').empty();
+        var html =
+            `<input type="button" class="btn btn-danger btn-dlt" value="Delete" onclick="delete_record(${id},'tbl_sylabus_master')" />`;
+        $('#m_footer').append(html);
+        $('#cnfModal').modal('show');
+    }
 
-    $.ajax({
-        type: "POST",
-        url: "ajax_master.php",
-        data: {
+    function delete_record(id, tbl) {
 
-            action: "send",
-            id: id,
-            table: tbl
-        },
-        success: function(res) {
-            console.log(res);
-            if (res == "success") {
-                sessionStorage.message = "Send to MDRAFM Successfully";
-                sessionStorage.type = "success";
-                location.reload();
+        $.ajax({
+            type: "POST",
+            url: "ajax_master.php",
+            data: {
+
+                action: "delete",
+                id: id,
+                table: tbl
+            },
+            success: function(res) {
+                console.log(res);
+                if (res == "success") {
+                    sessionStorage.message = "record deleted successfully";
+                    sessionStorage.type = "success";
+                    location.reload();
+                }
             }
-        }
-    })
-}
+        })
+    }
+
+    function send_record(id, tbl) {
+
+        $.ajax({
+            type: "POST",
+            url: "ajax_master.php",
+            data: {
+
+                action: "send",
+                id: id,
+                table: tbl
+            },
+            success: function(res) {
+                console.log(res);
+                if (res == "success") {
+                    sessionStorage.message = "Send to MDRAFM Successfully";
+                    sessionStorage.type = "success";
+                    location.reload();
+                }
+            }
+        })
+    }
 </script>

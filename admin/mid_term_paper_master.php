@@ -3,8 +3,8 @@
 
 
 <head>
-    <?php 
-    
+    <?php
+
     include('header_link.php');
     include('../config.php');
     include 'database.php';
@@ -15,8 +15,7 @@
 <body class="user-profile">
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <div class="wrapper ">
@@ -40,8 +39,7 @@
                     </div>
                     <div class="col-md-6">
                         <!-- Modal -->
-                        <div class="modal fade" id="termModal" tabindex="-1" aria-labelledby="termModalLabel"
-                            aria-hidden="true">
+                        <div class="modal fade" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -53,104 +51,143 @@
                                     <div class="modal-body">
 
                                         <form method="POST" id="frm_paper">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><strong>Syllabus</strong></label>
+                                                        <select class="custom-select mr-sm-2" id="paper_syllabus" name="syllabus_id">
+                                                            <option value="0" selected>Select Syllabus</option>
+                                                            <?php
+                                                            $db = new Database();
+                                                            $count = 0;
+                                                            $db->select('tbl_sylabus_master', "*", null, "trng_type = 3", null, null);
+                                                            // print_r( $db->getResult());
+                                                            foreach ($db->getResult() as $row) {
+                                                                //print_r($row);
+                                                                $count++
+                                                            ?>
+                                                                <option value="<?php echo $row['id'] ?>">
+                                                                    <?php echo $row['descr'] ?>
+                                                                </option>
 
-                                            
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label><strong>Paper Code</strong></label>
-                                                        <input type="text" class="form-control" name="paper_code" id="paper_code"
-                                                            placeholder="Enter Paper Code">
+                                                        <input type="text" class="form-control" name="paper_code" id="paper_code" placeholder="Enter Paper Code">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><strong>Paper Title</strong></label>
+                                                        <input type="text" class="form-control" name="paper_title" id="paper_title" placeholder="Enter Paper Title">
                                                     </div>
                                                 </div>
                                             </div>
                                            
-                                            <input type="hidden" id="update_id" >
+
+                                            <input type="hidden" id="update_id">
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                    <!-- <button type="submit" class="btn btn-primary" name="submit" value="Save" id="save"
+                                        <!-- <button type="submit" class="btn btn-primary" name="submit" value="Save" id="save"
                                             onclick="add('term','frm_term','tbl_term_master')">Save</button> -->
-                                        <button type="submit" class="btn btn-primary" name="submit" value="Save"
-                                            id="save" onclick="add('paper','frm_paper','tbl_mid_paper_paster')">Save</button>
+                                        <button type="submit" class="btn btn-primary" name="submit" value="Save" id="save" onclick="add('paper','frm_paper','tbl_mid_paper_master')">Save</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    
+
                 </div>
+
+                <div class="row" style="margin-top:50px">
+                    <div class="col-md-12">
+
+                        <div class="card">
+                            <div class="card-header">
+
+                                <h4 class="card-title">Paper Master Syllabus Wise </h4>
+
+                            </div>
+                            <div class="card-body">
+                                <form id="frm_range">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label><strong>Syllabus</strong></label>
+                                                <select class="custom-select mr-sm-2" id="syllabus_id" name="syllabus_id">
+                                                    <option value="0" selected>Select Syllabus</option>
+                                                    <?php
+                                                    $db = new Database();
+                                                    $count = 0;
+                                                    $db->select('tbl_sylabus_master', "*", null, "trng_type = 3", null, null);
+                                                    // print_r( $db->getResult());
+                                                    foreach ($db->getResult() as $row) {
+                                                        //print_r($row);
+                                                        $count++
+                                                    ?>
+                                                        <option value="<?php echo $row['id'] ?>">
+                                                            <?php echo $row['descr'] ?>
+                                                        </option>
+
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+
+                                                <input type="button" class="btn btn-primary" value="View" onclick="viewPaperMaster()" style="margin-top: 20px;">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <div class="row">
                     <div class="col-md-12">
 
                         <div class="card">
                             <div class="card-header">
-                                
-                               <div class="row">
-                                    <div class="col-md-4">  
-                                      <h4 class="card-title"> Mid Term Paper Master</h4>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h4 class="card-title"> Mid Term Paper Master</h4>
                                     </div>
                                     <div class="col-md-6"></div>
                                     <div class="col-md-2">
-                                    <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#termModal"
-                                       value="Add New">
+                                        <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#termModal" value="Add New">
                                     </div>
                                 </div>
-                               
+
 
                             </div>
                             <div class="card-body">
-                                <div id="term2" class=" table table-responsive table-striped table-hover" style="width:65%;margin:0px auto" >
-                                    <table class=" term table">
-                                        <thead class="" style="background: #315682;color:#fff;font-size: 11px;">
+                                <div id="mid_paper" class=" table table-responsive table-striped table-hover" style="width:65%;margin:0px auto">
 
-                                        <th style="width:75px;">Sl No</th>
-                               
-                                        <th style="text-align:center;">Paper Code</th>
-                                       
-                                        <th style="text-align:center;width: 8rem;">Action</th>
-
-
-
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                               
-                               $db = new Database();
-                               $count = 0;
-                               $db->select('tbl_mid_paper_paster',"*",null,null,null,null);
-                              // print_r( $db->getResult());
-                               foreach($db->getResult() as $row){
-                                   //print_r($row);
-                                   $count++
-                                   ?>
-                                            <tr>
-                                                <td><?php echo $count; ?></td>
-                                                <td style="text-align:center;"><?php echo $row['paper_code']; ?> </td>
-                                                
-                                                    <td style="text-align:center;">
-
-
-                                                        <a href="#" style="color:#4164b3" class="edit"
-                                                            id="<?php echo $row['id']; ?>" onclick="edit(this.id)"><i
-                                                                class="far fa-edit " style="font-size:1.5rem;"></i></a>
-                                                        &nbsp;
-                                                        <a href="#" style="color:#e50c0c" id="<?php echo $row['id']; ?>"
-                                                            onclick="cnfBox(<?php echo $row['id']; ?>)"><i
-                                                                class="far fa-trash-alt "
-                                                                style="font-size:1.5rem;"></i></i></a><br>
-
-                                                    </td>
-                                            </tr>
-                                            <?php
-                               }
-                      
-                               
-                              ?>
-
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -225,94 +262,120 @@
 </html>
 
 <script type="text/javascript">
+    function viewPaperMaster() {
+        let syllabus_id = $('#syllabus_id').val();
 
+        $.ajax({
+            type: "POST",
+            url: "ajax_fetch_master_data.php",
 
-function add(str,frm,tbl){
-    
-    //console.log(frm);
-    var update_id = $('#update_id').val();
-    // var data = $('#'+frm).serializeArray();
-    // data.push({action: 'add', table: tbl,upadate_id: update_id});
-  
-    $.ajax({
-        type: "POST",
-        url: "ajax_master.php",
-        
-        data:  $('#'+frm).serialize() + '&'+$.param({ 'action': 'add','table':tbl,'update_id': update_id}),
-        success: function(res) {
-            console.log(res);
-            let elm = res.split('#');
-            //console.log(elm[0]);
-            if (elm[0] == "success") {
-                sessionStorage.message =  str +' '+ elm[1]; 
-                sessionStorage.type = "success";
-                location.reload();
+            data: {
+                action: "view_mid_paper_master",
+                syllabus_id: syllabus_id,
+
+            },
+            success: function(res) {
+                console.log(res);
+                $('#mid_paper').html(res);
+                $('#mid_paper_tbl').DataTable();
+                paperE1 = document.querySelector('#paper_id');
             }
-        }
-    })
+        })
 
-}
+    }
 
-function edit(id) {
+    function add(str, frm, tbl) {
 
-    $.ajax({
-        type: "POST",
-        url: "ajax_master.php",
-        dataType: "json",
-        data: {
-            action: "edit",
-            table: "tbl_paper_master",
-            edit_id: id
+        //console.log(frm);
+        var update_id = $('#update_id').val();
+        // var data = $('#'+frm).serializeArray();
+        // data.push({action: 'add', table: tbl,upadate_id: update_id});
 
-        },
-        success: function(res) {
-            console.log(res);
-            res.map((data) => {
+        $.ajax({
+            type: "POST",
+            url: "ajax_master.php",
 
-                    $('#update_id').val(data.id);
-                  
-                    $('#paper_code').val(data.paper_code);
-                    $('#title').val(data.title);
-
-                    $('#save').html('Update');
-                    $('#save').attr('id', 'update');
-                    $('#termModal').modal('show');
+            data: $('#' + frm).serialize() + '&' + $.param({
+                'action': 'add',
+                'table': tbl,
+                'update_id': update_id
+            }),
+            success: function(res) {
+                console.log(res);
+                let elm = res.split('#');
+                //console.log(elm[0]);
+                if (elm[0] == "success") {
+                    sessionStorage.message = str + ' ' + elm[1];
+                    sessionStorage.type = "success";
+                    location.reload();
                 }
-
-            )
-
-        }
-    })
-}
-
-function cnfBox(id) {
-    //alert(id);
-    $('#m_footer').empty();
-    var html =
-        `<input type="button" class="btn btn-danger btn-dlt" value="Delete" onclick="delete_record(${id},'tbl_paper_master')" />`;
-    $('#m_footer').append(html);
-    $('#cnfModal').modal('show');
-}
-
-function delete_record(id, tbl) {
-
-    $.ajax({
-        type: "POST",
-        url: "ajax_master.php",
-        data: {
-
-            action: "delete",
-            id: id,
-            table: tbl
-        },
-        success: function(res) {
-            console.log(res);
-            if (res == "success") {
-                sessionStorage.message = "record deleted successfully";
-                sessionStorage.type = "success";
-                location.reload();
             }
-        }
-    })
-}
+        })
+
+    }
+
+    function edit(id) {
+
+        $.ajax({
+            type: "POST",
+            url: "ajax_master.php",
+            dataType: "json",
+            data: {
+                action: "edit",
+                table: "tbl_mid_paper_master",
+                edit_id: id
+
+            },
+            success: function(res) {
+                console.log(res);
+                res.map((data) => {
+
+                        $('#update_id').val(data.id);
+                        $('#paper_syllabus').val(data.syllabus_id);
+                        $('#paper_title').val(data.paper_title);
+                        $('#paper_code').val(data.paper_code);
+                        $('#title').val(data.title);
+
+                        $('#save').html('Update');
+                        $('#save').attr('id', 'update');
+                        $('#termModal').modal('show');
+                    }
+
+                )
+
+            }
+        })
+    }
+
+    function cnfBox(id) {
+        //alert(id);
+        $('#m_footer').empty();
+        var html =
+            `<input type="button" class="btn btn-danger btn-dlt" value="Delete" onclick="delete_record(${id},'tbl_mid_paper_master')" />`;
+        $('#m_footer').append(html);
+        $('#cnfModal').modal('show');
+    }
+
+    function delete_record(id, tbl) {
+
+        $.ajax({
+            type: "POST",
+            url: "ajax_master.php",
+            data: {
+
+                action: "delete",
+                id: id,
+                table: tbl,
+                status_value:0
+            },
+            success: function(res) {
+                console.log(res);
+                if (res == "success") {
+                    sessionStorage.message = "record deleted successfully";
+                    sessionStorage.type = "success";
+                    location.reload();
+                }
+            }
+        })
+    }
 </script>

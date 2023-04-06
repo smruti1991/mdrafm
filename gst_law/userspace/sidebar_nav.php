@@ -64,7 +64,7 @@ $db = new Database();
 							
 						<?php
 					   }
-					   if($_SESSION['role'] == 3){
+					   if($_SESSION['role'] == 3 ||$_SESSION['role'] == 5){
 						?>
 						   
 						    <li class="nav-item"><a href="add_case.php" class="nav-link "><span class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Add Case</span></a></li>
