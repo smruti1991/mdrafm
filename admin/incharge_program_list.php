@@ -73,9 +73,10 @@
                                $db = new Database();
                                $count = 0;
                                //$db->select('tbl_program_master',"*",null,null,null,null);
-                               $sql = "SELECT p.id,p.prg_name,t.id as trng_id,t.type,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion,p.status,p.course_director,p.asst_course_director 
+                               $sql = "SELECT p.id,p.prg_name,t.id as trng_id,t.type,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion,p.status,p.course_director_id as course_director
                                             FROM `tbl_program_master` p JOIN `tbl_training_type` t 
                                             ON p.trng_type=t.id
+                                           
                                             WHERE p.status != 'draft' AND ( p.trng_type = 1 OR p.trng_type = 2 )  ";
                                 $db->select_sql($sql);             
                               // print_r( $db->getResult());
@@ -171,8 +172,8 @@
                                                                             <?php 
                                                                             
                                                                            // $db->select("tbl_program_master","*",null,'id='.$row['id'],null,null);
-                                                                           $sql = "SELECT p.id,p.prg_name,t.id as trng_type,t.type,s.descr,p.course_director,p.asst_course_director,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion,
-                                                                                   p.status,p.course_director,p.asst_course_director
+                                                                           $sql = "SELECT p.id,p.prg_name,t.id as trng_type,t.type,s.descr,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion,
+                                                                                   p.status
                                                                                     FROM `tbl_program_master` p JOIN `tbl_training_type` t 
                                                                                     ON p.trng_type=t.id
                                                                                     JOIN `tbl_sylabus_master` s 

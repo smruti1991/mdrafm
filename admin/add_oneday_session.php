@@ -244,7 +244,7 @@
       console.log(URL);
         $.ajax({
             type: "POST",
-            url: 'fbfbgfdxgvf',
+            url: URL,
             data: $('#add_session_frm').serialize(),
             success:function(data){
                 console.log(data);
@@ -456,12 +456,16 @@ $.ajax({
         console.log(res);
         let elm = res.split('#');
         var str = "Time Table";
-        callback(elm[2],id);
+       
        
         if (elm[2] == "success") {
             sessionStorage.message = str + ' ' + elm[1];
             sessionStorage.type = "success";
             addOneDaySession(trng_type);
+            window.setTimeout(function () {
+                callback(elm[2],id);
+                }, 1000);
+           
             //location.reload();
         }
 
@@ -476,6 +480,7 @@ $.ajax({
             }
 
         }
+       
     }
 })
 

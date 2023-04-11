@@ -244,6 +244,24 @@ if( isset($_POST['action']) && $_POST['action'] == 'select_paper'){
      }
     
    }
+   if( isset($_POST['action']) && $_POST['action'] == 'select_mid_paper'){
+    //print_r($frm_data);
+     $paper_id = $frm_data['paper_id'];
+     $syllabus_id = $frm_data['syllabus_id'];
+     $table = $frm_data['table'];
+     
+        echo '<option>Select Paper</option>';
+      
+        
+         //  echo '<option value="'.$row['id'].'">'.$row['mjr_subject_id'].'</option>';
+         $db->select('tbl_mid_syllabus',"*",null,'syllabus_id = "'.$syllabus_id.'" AND paper='.$paper_id,null,null);
+         foreach($db->getResult() as $row1){
+               echo '<option value="'.$row1['id'].'">'.$row1['subject'].'</option>';
+         }
+         
+       
+    
+   }
 
    
  if( isset($_POST['action']) && $_POST['action'] == 'select_mjr_subject'){
@@ -413,14 +431,15 @@ if ( isset($_POST['action']) && $_POST['action'] == 'verify_time_edit'){
 
 if ( isset($_POST['action']) && $_POST['action'] == 'add_table'){
     //$term = $_POST['term'];
-       //print_r($_POST);
-       //print_r($frm_data);
+      //  print_r($_POST);
+      //  print_r($frm_data);
       // exit;
     $session_no = $frm_data['session_no'];
     $update_id =$_POST['update_id'];
     $table = $_POST['table'];
     $start_time = date("H:i:s", strtotime($frm_data['class_start_time']));
     $end_time =  date("H:i:s", strtotime($frm_data['class_end_time']));
+    $table = $_POST['table'];
     $msg = '';
   
     if($start_time > $end_time ){
@@ -490,9 +509,9 @@ if ( isset($_POST['action']) && $_POST['action'] == 'add_table'){
             break;
         //mid term
         case '3':
-            $sql = "INSERT INTO tbl_time_table (program_id,table_range_id,trng_type,training_dt, session_no,period_type,break_time,faculty_type, faculty_id, class_start_time, class_end_time,subject_id, paper_covered,session_type,other_class,class_remark,no_of_session) 
-            VALUES ('".$frm_data['program_id']."','".$frm_data['table_range_id']."','".$frm_data['trng_type']."','".$frm_data['training_dt']."','".$session_no."','".$frm_data['period_type']."','".$frm_data['break']."','".$frm_data['faculty_type']."','".$frm_data['faculty_id']."','".$frm_data['class_start_time']."',
-            '".$frm_data['class_end_time']."','".$frm_data['subject_id']."','".$frm_data['paper_covered']."','".$frm_data['session_type']."','".$frm_data['other_class']."','".$frm_data['class_remark']."','".$frm_data['no_of_session']."')";
+            $sql = "INSERT INTO `$table` (program_id,table_range_id,trng_type,training_dt, session_no,period_type,break_time,faculty_type, faculty_id,paper_id,subject_id, class_start_time, class_end_time, paper_covered,session_type,other_class,class_remark,no_of_session) 
+            VALUES ('".$frm_data['program_id']."','".$frm_data['table_range_id']."','".$frm_data['trng_type']."','".$frm_data['training_dt']."','".$session_no."','".$frm_data['period_type']."','".$frm_data['break']."','".$frm_data['faculty_type']."','".$frm_data['faculty_id']."','".$frm_data['paper_id']."','".$frm_data['subject_id']."','".$frm_data['class_start_time']."',
+            '".$frm_data['class_end_time']."','".$frm_data['paper_covered']."','".$frm_data['session_type']."','".$frm_data['other_class']."','".$frm_data['class_remark']."','".$frm_data['no_of_session']."')";
     
             break;
         //short term
@@ -510,7 +529,7 @@ if ( isset($_POST['action']) && $_POST['action'] == 'add_table'){
           break;
       }
       
-      echo $sql;
+     // echo $sql;
       //exit;
        
         $db->insert_sql($sql);

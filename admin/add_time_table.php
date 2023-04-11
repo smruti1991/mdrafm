@@ -19,9 +19,12 @@
     $trng_dt = '';
     $time_table ='';
     $program_table='';
+    $subject_tbl='';
+
      if( $trng_type == 1 || $trng_type == 2){
          $time_table = 'tbl_time_table';
         $program_table = 'tbl_program_master';
+        $subject_tbl = 'tbl_subject_master';
      }
      elseif($trng_type == 3 || $trng_type == 8){
                 //  $time_table = 'tbl_inhouse_time_table';
@@ -35,6 +38,7 @@
      if($trng_type == 3 || $trng_type ==4){
       
         $time_table = "tbl_inhouse_time_table";
+        $subject_tbl = 'tbl_mid_syllabus';
     }
     else if($trng_type == 5 || $trng_type ==8){
        
@@ -256,7 +260,7 @@
 
                                             <?php  
                                               $session_count = 0;
-                                                 $db->select('tbl_time_table',"MAX(session_no) as session",null,"table_range_id = '".$_POST['id']."' AND trng_type =".$trng_type,null,null);
+                                                 $db->select($time_table,"MAX(session_no) as session",null,"table_range_id = '".$_POST['id']."' AND trng_type =".$trng_type,null,null);
                                                    //print_r( $db->getResult());
                                                    foreach($db->getResult() as $seson){
                                                     $session_count = $seson['session'];
@@ -265,7 +269,7 @@
                                             <th>
                                                 <?php 
                                                                echo $i ;
-                                                               $db->select('tbl_time_table',"class_start_time,class_end_time",null,"session_no = '$i' GROUP BY session_no",null,null);
+                                                               $db->select($time_table,"class_start_time,class_end_time",null,"session_no = '$i' GROUP BY session_no",null,null);
                                                                //print_r( $db->getResult());
                                                                switch ($i) {
                                                                    case '1':
@@ -302,7 +306,7 @@
                                
                               
                                             $count = 0;
-                                            $db->select('tbl_time_table',"DISTINCT training_dt",null,"table_range_id = '".$_POST['id']."' AND trng_type =".$trng_type,null,null);
+                                            $db->select($time_table,"DISTINCT training_dt",null,"table_range_id = '".$_POST['id']."' AND trng_type =".$trng_type,null,null);
                                             // print_r( $db->getResult());
                                             foreach($db->getResult() as $row){
                                                 //print_r($row);
@@ -314,7 +318,7 @@
 
                                                 <?php
                                                    for ($x=1; $x <= $session_count ; $x++) { 
-                                                    $db->select('tbl_time_table',"*",null,"table_range_id = '".$_POST['id']."' AND trng_type = '".$trng_type."' AND training_dt='".$row['training_dt']."' AND session_no = '".$x."' ",null,null); 
+                                                    $db->select($time_table,"*",null,"table_range_id = '".$_POST['id']."' AND trng_type = '".$trng_type."' AND training_dt='".$row['training_dt']."' AND session_no = '".$x."' ",null,null); 
                                                     //print_r( $db->getResult()); echo '<pre>';
                                                     ?>
                                                 <td class="session">
@@ -343,10 +347,10 @@
                                                                     echo '<p>'. $res['paper_covered']. '</p>' ;
                                                                 }
                                                                 else{
-                                                                    $db->select_one('tbl_mid_subject_master',"descr",$res['subject_id']);
+                                                                    $db->select_one($subject_tbl,"subject",$res['subject_id']);
                                                                         
                                                                     foreach($db->getResult() as $row3){
-                                                                        echo '<p>'. $row3['descr']. '</p>';
+                                                                        echo '<p>'. $row3['subject']. '</p>';
                                                                     }
                                                                 }
                                                                

@@ -216,22 +216,21 @@
                                     switch ($_POST['trng_type']) {
                                         case '1':
 
-                                            $sql = "SELECT p.id,p.prg_name,t.type,s.descr,p.course_director,p.asst_course_director,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion 
+                                            $sql = "SELECT p.id,p.prg_name,t.type,s.descr,d.course_director,d.asst_course_director,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion 
                                             FROM `tbl_program_master` p JOIN `tbl_training_type` t 
                                             ON p.trng_type=t.id
                                             JOIN `tbl_sylabus_master` s 
                                             ON p.syllabus_id=s.id
-                                            
+                                            JOIN `tbl_program_directors` d ON p.course_director_id = d.id
                                             WHERE p.id = '" . $_POST['id'] . "' ";
                                             break;
                                         case '2':
-                                            $sql = "SELECT p.id,p.prg_name,t.type,s.descr,p.course_director,p.asst_course_director,f.name,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion 
+                                            $sql = "SELECT p.id,p.prg_name,t.type,s.descr,d.course_director,d.asst_course_director,f.name,p.provisonal_Sdate,p.provisonal_Edate,p.dt_publication,p.dt_completion 
                                                 FROM `tbl_program_master` p JOIN `tbl_training_type` t 
                                                 ON p.trng_type=t.id
                                                 JOIN `tbl_mid_syllabus` s 
                                                 ON p.syllabus_id=s.id
-                                                JOIN `tbl_faculty_master` f
-                                                ON p.course_director = f.id
+                                                JOIN `tbl_program_directors` d ON p.course_director_id = d.id
                                                 WHERE p.id = '" . $_POST['id'] . "' ";
                                             break;
                                         case '3':
@@ -254,24 +253,21 @@
                                     $db->select_sql($sql);
                                     ///print_r($db->getResult());
                                     foreach ($db->getResult() as $row) {
-                                        //print_r($row);
+                                      //  print_r($row);
                                         $prog_name = $row['prg_name'];
                                         if($row['course_director'] != 0){
                                             
-                                            $db->select('tbl_program_directors',"course_director,asst_course_director",null,"id=".$row['course_director'],null,null);
-                                                foreach($db->getResult() as $res){
-                                                   
-                                                            $db->select('tbl_faculty_master','name,desig',null,'id='.$res['course_director'],null,null);
-                                                            foreach($db->getResult() as $res_coDir){
-                                                             $coDir =  $res_coDir['name']; 
-                                                            }
-
-                                                            $db->select('tbl_faculty_master','name,desig',null,'id='.$res['asst_course_director'],null,null);
-                                                            foreach($db->getResult() as $res_asst_coDir){
-                                                             $asst_coDir =  $res_asst_coDir['name'];
-                                                            }
-                         
-                                                }
+                                            $db->select('tbl_faculty_master','name,desig',null,'id='.$row['course_director'],null,null);
+                                            foreach($db->getResult() as $res_coDir){
+                                               $coDir =  $res_coDir['name']; 
+                                               $desig =  $res_coDir['desig']; 
+                                            }
+                           
+                                            $db->select('tbl_faculty_master','name,desig',null,'id='.$row['asst_course_director'],null,null);
+                                            foreach($db->getResult() as $res_asst_coDir){
+                                               $asst_coDir =  $res_asst_coDir['name']; 
+                                               $asst_desig =  $res_asst_coDir['desig']; 
+                                            }
                                         }
                                        
                                        

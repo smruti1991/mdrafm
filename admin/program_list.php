@@ -180,6 +180,8 @@
                                                                             $db->select("tbl_program_master","*",null,'id='.$row['id'],null,null);
                                                                             foreach($db->getResult() as $row1){
                                                                                 //print_r($row1);
+                                                                                $cd_id = $db->getCourseDirector($row1['course_director_id']);
+                                                                                $asst_cd_id = $db->getAsstCourseDirector($row1['course_director_id']);
                                                                                 if( $row1['status']=='approve' ){
                                                                                     ?>
                                                                         <div class="row">
@@ -213,7 +215,7 @@
                                                                                                     ?>
                                                                                             <option
                                                                                                 value="<?php echo $row4['id'] ?>"
-                                                                                                <?php echo ($row4['id'] == $row1['course_director'])?'selected':'' ?>>
+                                                                                                <?php echo ($row4['id'] == $cd_id)?'selected':'' ?>>
                                                                                                 <?php echo $row4['name'] ?>
                                                                                             </option>
 
@@ -255,7 +257,7 @@
                                                                                                     ?>
                                                                                                 <option
                                                                                                     value="<?php echo $row5['id'] ?>"
-                                                                                                    <?php echo ($row5['id'] == $row1['asst_course_director'])?'selected':'' ?>>
+                                                                                                    <?php echo ($row5['id'] == $asst_cd_id)?'selected':'' ?>>
                                                                                                     <?php echo $row5['name'] ?>
                                                                                                 </option>
 
@@ -396,6 +398,8 @@
                                                                             $db->select("tbl_program_master","*",null,'id='.$row['id'],null,null);
                                                                             foreach($db->getResult() as $row1){
                                                                                // print_r($row1);
+                                                                               $cd_id = $db->getCourseDirector($row1['course_director_id']);
+                                                                               $asst_cd_id = $db->getAsstCourseDirector($row1['course_director_id']);
                                                                                 if( $row1['status']=='approve' ){
                                                                                    
                                                                                     ?>
@@ -422,7 +426,7 @@
                                                                                                    ?>
                                                                                                      <option
                                                                                                     value="<?php echo $row5['id'] ?>"
-                                                                                                    <?php echo ($row2['id'] == $row1['course_director'])?'selected':'' ?>>
+                                                                                                    <?php echo ($row2['id'] == $cd_id)?'selected':'' ?>>
                                                                                                     <?php echo $row2['name'] ?>
                                                                                                   </option>
                                                                                                    <?php
@@ -465,7 +469,7 @@
                                                                                                     ?>
                                                                                                 <option
                                                                                                     value="<?php echo $row5['id'] ?>"
-                                                                                                    <?php echo ($row5['id'] == $row1['asst_course_director'])?'selected':'' ?>>
+                                                                                                    <?php echo ($row5['id'] == $asst_cd_id)?'selected':'' ?>>
                                                                                                     <?php echo $row5['name'] ?>
                                                                                                 </option>
 

@@ -19,14 +19,16 @@
       
       $trng_type = $_POST['type'];
       $time_table ='';
-    $program_table='';
+      $program_table='';
      if( $trng_type == 1 || $trng_type == 2){
          $time_table = 'tbl_time_table';
         $program_table = 'tbl_program_master';
+        $subject_tbl = 'tbl_subject_master';
      }
      elseif($trng_type == 3 || $trng_type == 8){
                 //  $time_table = 'tbl_inhouse_time_table';
              $program_table = 'tbl_mid_program_master';
+             $subject_tbl = 'tbl_mid_syllabus';
      }
      elseif($trng_type == 4 || $trng_type == 5){
         //  $time_table = 'tbl_short_term_time_table';
@@ -56,7 +58,7 @@
     }else{
        
     //     $db->select($program_table,"f.name,f.desig,p.start_date,p.end_date"," p JOIN `tbl_faculty_master` f ON p.course_director = f.id","p.id=".$_POST['prog_id'],null,null);
-    $db->select($program_table,"p.start_date,p.end_date,d.course_director,d.asst_course_director"," p JOIN `tbl_program_directors` d ON p.course_director = d.id","p.id=".$_POST['prog_id'],null,null);
+    $db->select($program_table,"p.start_date,p.end_date,d.course_director,d.asst_course_director"," p JOIN `tbl_program_directors` d ON p.course_director_id = d.id","p.id=".$_POST['prog_id'],null,null);
       foreach($db->getResult() as $res){
        
                  $db->select('tbl_faculty_master','name,desig',null,'id='.$res['course_director'],null,null);
@@ -133,7 +135,7 @@
                             <div class="card-header" style="font-size: 0.7rem;">
                                 <h5 class="card-title text-center">Madhusudan Das Regional Academy of Financial
                                     Management,Bhubaneswar</h5>
-                                <h5 class="text-center"> Time Table for <?php echo $_POST['prog_name'] .', '.$startDtae.' to '.$endDate ?> </h5>
+                                <h5 class="text-center"> Time Table for <?php echo $_POST['prog_name'] .', '.date('d-m-Y', strtotime($from_dt)).' to '.date('d-m-Y', strtotime($to_dt)) ?> </h5>
                                 <h5 class="text-center">Course Director - <?php echo $coDir.','.$desig ?> </h5>
                                 <h5 class="text-center"> Assistant Course Director - <?php echo $asst_coDir.','.$asst_desig ?> </h5>
                                 <?php
@@ -313,10 +315,10 @@
                                                                     echo '<p>'. $res['paper_covered']. '</p>' ;
                                                                 }
                                                                 else{
-                                                                    $db->select_one('tbl_mid_subject_master',"descr",$res['subject_id']);
+                                                                    $db->select_one($subject_tbl,"subject",$res['subject_id']);
                                                                         
                                                                     foreach($db->getResult() as $row3){
-                                                                        echo '<p>'. $row3['descr']. '</p>';
+                                                                        echo '<p>'. $row3['subject']. '</p>';
                                                                     }
                                                                 }
                                                                

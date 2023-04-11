@@ -54,7 +54,7 @@
                                                     <?php 
                                                                     $db = new Database();
                                                                     $count = 0;
-                                                                    $db->select('tbl_mid_program_master',"*",null,"status = 'approve' ",null,null);
+                                                                    $db->select('tbl_mid_program_master',"*",null,"active =1 AND status = 'approve' ",null,null);
                                                                     // print_r( $db->getResult());
                                                                     foreach($db->getResult() as $row){
                                                                         //print_r($row);
