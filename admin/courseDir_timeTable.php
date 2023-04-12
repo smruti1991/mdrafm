@@ -34,6 +34,71 @@
 
 
             <div class="content" style="margin-top: 50px;">
+            <div class="row" style="margin-top:50px">
+                    <div class="col-md-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Time Table</h4>
+
+                            </div>
+                            <div class="card-body">
+                                <form id="frm_range">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label><strong>Select Training Type</strong></label>
+                                                <select class="custom-select mr-sm-2" name="traning_type" id="traning_type">
+                                                    <option selected>Select Type</option>
+                                                    <?php 
+                                                                    $db = new Database();
+                                                                    $count = 0;
+                                                                    $db->select('tbl_training_type',"*",null,null,null,null);
+                                                                    // print_r( $db->getResult());
+                                                                    foreach($db->getResult() as $row){
+                                                                        //print_r($row);
+                                                                        $count++
+                                                                 ?>
+                                                    <option value="<?php echo $row['id'] ?>">
+                                                        <?php echo $row['type'] ?>
+                                                    </option>
+
+                                                    <?php 
+                                                            }
+                                                       ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label><strong>Select Program</strong></label>
+                                                <select class="custom-select mr-sm-2" name="program_id" id="program_id">
+                                                    <option selected>Select Program</option>
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+                                         
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <div class="form-group">
+
+                                                <input type="button" class="btn btn-primary" value="view" id="view_time_table"  style="float: right"
+                                                    onclick="time_table()">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                                <input type="hidden" name="update_id"  id="update_id" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
              
                 <div class="row">
                     <div class="col-md-12">
@@ -43,7 +108,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <h4 class="card-title">Time Table For Approval</h4>
-                                     <?php print_r($_SESSION) ?>
+                                     <?php //print_r($_SESSION) ?>
                                     </div>
 
                                 </div>
@@ -51,99 +116,9 @@
 
                             </div>
                             <div class="card-body">
-                                <div id="term2" class=" table table-responsive table-striped table-hover"
+                                <div id="viewTimeTable" class=" table table-responsive table-striped table-hover"
                                     style="width:100%;margin:0px auto">
-                                    <table class=" term table">
-                                        <thead class="" style="background: #315682;color:#fff;font-size: 11px;">
-                                            <th style="text-align:center;">Sl No</th>
-                                            <th style="text-align:center;">Name</th>
-                                            <th style="text-align:center;">Program Name</th>
-                                            <th style="text-align:center;">From Date</th>
-                                            <th style="text-align:center;">To Date</th>
-                                            <th style="text-align:center;">Status</th>
-                                            <th style="text-align:center;">View</th>
-
-
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                               
-                               $db = new Database();
-                               $count = 0;
-                               $program_id = 0;
-                               $prog_sql = "SELECT id FROM `tbl_program_master` WHERE course_director = (SELECT id FROM `tbl_faculty_master` WHERE phone = '".$_SESSION['username']."' );";
-                               $db->select_sql($prog_sql);
-                               foreach($db->getResult() as $program){
-                                $program_id = $program['id'];
-                               }
-                               //echo $program_id ; exit;
-                               $db->select('tbl_time_table_range',"*",null," program_id = '$program_id'  AND status != 0",null,null);
-                              // print_r( $db->getResult());
-                              foreach($db->getResult() as $row){
-                                //print_r($row);
-                                $count++;
-                                $from_dt = $row['from_dt'];
-                                $to_dt = $row['to_dt'];
-                                $prog_name='';
-                                $prog_id = '';
-                                ?>
-                                            <tr>
-                                                <td><?php echo $count; ?></td>
-                                                <td style="text-align:center;"><?php echo $row['name'] ?></td>
-                                                <td style="text-align:center;">
-                                                    <?php 
-                                                     $db->select_one('tbl_program_master',"id,prg_name",$row['program_id']);
-                                                    
-                                                     foreach($db->getResult() as $row1){
-                                                         echo $prog_name = $row1['prg_name'];
-                                                              $prog_id   = $row1['id'];
-                                                     }
-                                                   
-                                                     ?>
-                                                </td>
-                                                <td style="text-align:center;">
-                                                    <?php echo date("d-m-Y", strtotime($row['from_dt']));  ?> </td>
-                                                <td style="text-align:center;">
-                                                    <?php echo date("d-m-Y", strtotime($row['to_dt']));  ?> </td>
-                                                <td style="text-align:center;">
-                                                    <?php 
-                                                     switch ($row['status']) {
-                                                        case '1':
-                                                            echo 'Pending';
-                                                            break;
-                                                        case '2':
-                                                            echo 'Approved';
-                                                            break;
-                                                        default:
-                                                            # code...
-                                                            break;
-                                                     }
-                                                    ?> 
-                                                </td>
-
-                                                <td style="text-align:center;">
-
-                                                    <input type="button" class="btn " style="background:#3292a2"
-                                                        name="send"
-                                                        onclick="review_timeTable(<?php echo $row['id'] ?>,<?php echo $row['type']; ?>,<?php echo $prog_id; ?>,<?php echo "'$prog_name'"  ?>,<?php echo "'$from_dt'"  ?>,<?php echo "'$to_dt'" ?>)"
-                                                        value="View" />
-
-
-                                                </td>
-
-
-
-
-                                            </tr>
-                                            <?php
-                                           }
-                   
-                      
-                               
-                              ?>
-
-                                        </tbody>
-                                    </table>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -227,13 +202,39 @@
 
 <script type="text/javascript">
 // status code 1->pending,2->approve,3->reject
-function review_timeTable(id,type,prog_id,prog_name,from_dt,to_dt) {
+
+function time_table(){
+   
+    const program_id = $('#program_id').val();
+    const trng_type =  $('#traning_type').val();
+    
+    $.ajax({
+        type: "POST",
+        url: "ajax_search.php",
+        data: {
+
+            action: "viewTimeTable",
+            program_id:program_id,
+            trng_type:trng_type,
+        },
+        success: function(res) {
+            console.log(res);
+            $('#viewTimeTable').html(res);
+            $('#viewTimeTable').show();
+            
+        }
+    })
+}
+
+function review_timeTable(program_table,time_table,subject_tbl,id,type,prog_id,prog_name,from_dt,to_dt) {
 
     $.ajax({
         type: "POST",
         url: "ajax_courseDir.php",
         data: {
-
+            program_table,
+            time_table,
+            subject_tbl,
             id: id,
             type: type,
             prog_id: prog_id,
@@ -372,6 +373,27 @@ $('#trng_type').on('change', function() {
         }
     })
 
+})
+$('#traning_type').on('change', function(){
+   var type = $('#traning_type').val();
+
+   $.ajax({
+        type: "POST",
+        url: "ajax_master.php",
+        data: {
+
+            action: "timeTable_prgram",
+            type: type,
+            
+        },
+        success: function(res) {
+            
+                $('#program_id').html(res);
+            
+            
+            
+        }
+    })
 })
 
 function add(str, frm, tbl) {

@@ -898,6 +898,9 @@ if( isset($_POST['action']) && $_POST['action'] == 'timeTable_prgram'){
   if($type == 1 || $type == 2){
     $prog_table = 'tbl_program_master';
   }
+  elseif($type == 3){
+    $prog_table = 'tbl_mid_program_master';
+  }
   elseif($type == 4 || $type == 5){
     $prog_table = 'tbl_short_program_master';
   }
