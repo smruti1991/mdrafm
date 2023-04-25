@@ -241,7 +241,7 @@
             URL = "one_day_session_template.php";
             table = "tbl_time_table.php";
         }
-      console.log(URL);
+     // console.log(URL);
         $.ajax({
             type: "POST",
             url: URL,

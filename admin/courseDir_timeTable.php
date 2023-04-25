@@ -375,8 +375,8 @@ $('#trng_type').on('change', function() {
 
 })
 $('#traning_type').on('change', function(){
-   var type = $('#traning_type').val();
-
+   const type = $('#traning_type').val();
+   const username = '<?php echo $_SESSION['username']; ?>'
    $.ajax({
         type: "POST",
         url: "ajax_master.php",
@@ -384,10 +384,11 @@ $('#traning_type').on('change', function(){
 
             action: "timeTable_prgram",
             type: type,
+            username:username
             
         },
         success: function(res) {
-            
+            console.log(res);
                 $('#program_id').html(res);
             
             

@@ -50,7 +50,7 @@
                                                 <?php 
                                                 $db = new Database();
                                                 $count = 0;
-                                                $db->select('tbl_program_master',"*",null,"trng_type = 1 AND status = 'approve' ",null,null);
+                                                $db->select('tbl_program_master',"*",null,"(trng_type = 1 OR trng_type = 2) AND status = 'approve' ",null,null);
                                                 // print_r( $db->getResult());
                                                 foreach($db->getResult() as $row){
                                                     //print_r($row);
@@ -68,6 +68,7 @@
 
                                     </div>
                                     <div class="col-md-3">
+                                    <input type="hidden" name="trng_type" value = "1" >
                                         <input type="submit" class="btn btn-info" name="Add" style="margin-top:25px"
                                             value="view">
 

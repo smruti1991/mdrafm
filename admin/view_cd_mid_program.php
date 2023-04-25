@@ -8,7 +8,7 @@
     include('header_link.php');
     include('../config.php');
     include 'database.php';
-   
+    
     ?>
     <style>
     .card label {
@@ -78,7 +78,9 @@
                                  foreach($db->getResult() as $row1){
                                      $faculty_id = $row1['id'];
                                  }
-                                 
+
+                               
+
                                $count = 0;
                               
                                $sql = "SELECT p.*,d.course_director,d.asst_course_director FROM `tbl_mid_program_master` p 

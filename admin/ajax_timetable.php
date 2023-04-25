@@ -708,11 +708,7 @@ if( isset($_POST['action']) && $_POST['action'] == 'get_program_detail'){
   $table = $_POST['table'];
 
   time_table_data($edit_id,$table);
-  // $db->select($table,"*",null,'id='.$edit_id,null,null);
   
-  //  $res = $db->getResult();
-  //  //print_r($res);
-  //  echo json_encode($res);
 }
 if( isset($_POST['action']) && $_POST['action'] == 'get_program_data'){
 
