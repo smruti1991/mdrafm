@@ -50,7 +50,7 @@
                                                 <?php 
                                                 $db = new Database();
                                                 $count = 0;
-                                                $db->select('tbl_program_master',"*",null,"trng_type = 3 AND status = 'approve' ",null,null);
+                                                $db->select('tbl_mid_program_master',"*",null,"trng_type = 3 AND status = 'approve' ",null,null);
                                                 // print_r( $db->getResult());
                                                 foreach($db->getResult() as $row){
                                                     //print_r($row);
@@ -69,6 +69,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <input type="hidden" name="trng_type" value = "3" >
+                                        
                                         <input type="submit" class="btn btn-info" name="Add" style="margin-top:25px"
                                             value="view">
 
@@ -126,7 +127,7 @@
                                                 <td style="text-align:center;"><?php echo $row['name'] ?></td>
                                                 <td style="text-align:center;">
                                                     <?php 
-                                                     $db->select_one('tbl_program_master',"id,prg_name",$row['program_id']);
+                                                     $db->select_one('tbl_mid_program_master',"id,prg_name",$row['program_id']);
                                                     
                                                      foreach($db->getResult() as $row1){
                                                          echo $prog_name = $row1['prg_name'];
@@ -250,16 +251,19 @@ function review_timeTable(id, type, prog_id, prog_name, from_dt, to_dt) {
 
     $.ajax({
         type: "POST",
-        url: "ajax_search.php",
+        url: "ajax_courseDir.php",
         data: {
 
+            program_table:'tbl_mid_program_master',
+            time_table:'tbl_inhouse_time_table',
+            subject_tbl:'tbl_subject_master',
             id: id,
             type: type,
             prog_id: prog_id,
             prog_name: prog_name,
             from_dt: from_dt,
             to_dt: to_dt,
-            action: 'view_timetable'
+            action: 'view_timetable_courseDir'
         },
         success: function(res) {
             console.log(res);

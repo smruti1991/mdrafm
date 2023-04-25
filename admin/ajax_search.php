@@ -2,6 +2,7 @@
 
 
 include 'database.php';
+include 'common_function.php';
 //    print_r($_POST);
 
 //    exit;
@@ -201,7 +202,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'faculty_class_list') {
     exit;
 }
 
-if (isset($_POST['action']) && $_POST['action'] == 'view_timetable') {
+if (isset($_POST['action']) && $_POST['action'] == 'view_timetable') { 
 
     $from_dt = $_POST["from_dt"];
     $to_dt = $_POST["to_dt"];
@@ -1723,7 +1724,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'viewTimeTable') {
         <tbody>
             <?php
             $count = 0;
-            
+
             //echo $program_id ; exit;
             $db->select('tbl_time_table_range', "*", null, "type = '$trng_type' AND program_id = '$program_id'  AND status != 0", null, null);
             // print_r( $db->getResult());
@@ -1771,8 +1772,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'viewTimeTable') {
 
                     <td style="text-align:center;">
 
-                        <input type="button" class="btn " style="background:#3292a2" name="send" 
-                         onclick="review_timeTable('<?php echo $program_table  ?>','<?php echo $time_table  ?>','<?php echo $subject_tbl  ?>',<?php echo $row['id'] ?>,<?php echo $row['type']; ?>,<?php echo $prog_id; ?>,<?php echo "'$prog_name'"  ?>,<?php echo "'$from_dt'"  ?>,<?php echo "'$to_dt'" ?>)" value="View" />
+                        <input type="button" class="btn " style="background:#3292a2" name="send" onclick="review_timeTable('<?php echo $program_table  ?>','<?php echo $time_table  ?>','<?php echo $subject_tbl  ?>',<?php echo $row['id'] ?>,<?php echo $row['type']; ?>,<?php echo $prog_id; ?>,<?php echo "'$prog_name'"  ?>,<?php echo "'$from_dt'"  ?>,<?php echo "'$to_dt'" ?>)" value="View" />
 
 
                     </td>
@@ -1801,6 +1801,33 @@ if (isset($_POST['action']) && $_POST['action'] == 'timeTable_date') {
     $trng_type = $_POST['trng_type'];
     $count = 0;
 
+    // $result = getProgramTable(4);
+    // print_r($result);
+    $time_table = '';
+    $program_table = '';
+
+    if ($trng_type == 1 || $trng_type == 2) {
+        $time_table = 'tbl_time_table';
+        $program_table = 'tbl_program_master';
+        $subject_tbl = 'tbl_subject_master';
+    } elseif ($trng_type == 3 || $trng_type == 8) {
+
+        $program_table = 'tbl_mid_program_master';
+        $subject_tbl = 'tbl_mid_syllabus';
+    } elseif ($trng_type == 4 || $trng_type == 5) {
+
+        $program_table = 'tbl_short_program_master';
+    }
+
+    if ($trng_type == 3 || $trng_type == 4) {
+
+        $time_table = "tbl_inhouse_time_table";
+    } else if ($trng_type == 5 || $trng_type == 8) {
+
+        $time_table = "tbl_sponsored_time_table.php";
+    }
+
+
 
 ?>
     <h5>Modify Time Table for Date <?php echo $t_date  ?> </h5>
@@ -1819,7 +1846,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'timeTable_date') {
         <tbody>
             <?php
 
-            $db->select('tbl_time_table', "*", null, "program_id  = '" . $program_id . "'  AND training_dt  = '" . $t_date . "' ", null, null);
+            $db->select($time_table, "*", null, "program_id  = '" . $program_id . "' AND trng_type =  '" . $trng_type . "'  AND training_dt  = '" . $t_date . "' ", null, null);
             //print_r($db->getResult());
             foreach ($db->getResult() as $res) {
                 //print_r($res);
@@ -1839,14 +1866,14 @@ if (isset($_POST['action']) && $_POST['action'] == 'timeTable_date') {
                                 //echo $status_modify['status'];
                                 if ($status_modify['status'] == 0 || $status_modify['status'] == 1) {
                         ?>
-                                    <a href="#" style="color:#4164b3;float: right;" class="edit_<?php echo $res['id']; ?>" id="<?php echo $res['id']; ?>" onclick="edit(this.id)"><i class="far fa-edit " style="font-size:1.5rem;"></i></a>
+                                    <a href="#" style="color:#4164b3;float: right;" class="edit_<?php echo $res['id']; ?>" id="<?php echo $res['id']; ?>" onclick="edit(this.id,'<?php echo $time_table ?>')"><i class="far fa-edit " style="font-size:1.5rem;"></i></a>
                             <?php
                                 }
                             }
                         } else {
                             $status_tb_range = 0;
                             if ($trng_type == 3 || $trng_type == 4) {
-                                $db->select('tbl_time_table_range', "*", null, "program_id  = '" . $program_id . "' ", null, null);
+                                $db->select('tbl_time_table_range', "*", null, "type = '" . $trng_type . "' AND program_id  = '" . $program_id . "' ", null, null);
                             } else {
                                 $db->select_one('tbl_time_table_range', 'status', $table_name);
                             }
@@ -1858,7 +1885,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'timeTable_date') {
                             }
                             //echo $status_tb_range;
                             ?>
-                            <a href="#" style="color:#4164b3;float: right;display:<?php echo ($status_tb_range == 1) ? "none" : ''; ?>" class="edit_<?php echo $res['id']; ?>" id="<?php echo $res['id']; ?>" onclick="edit(this.id)"><i class="far fa-edit " style="font-size:1.5rem;"></i></a>
+                            <a href="#" style="color:#4164b3;float: right; ?>" class="edit_<?php echo $res['id']; ?>" id="<?php echo $res['id']; ?>" onclick="edit(this.id,'<?php echo $time_table ?>')"><i class="far fa-edit " style="font-size:1.5rem;"></i></a>
                         <?php
                         }
 
@@ -1868,48 +1895,108 @@ if (isset($_POST['action']) && $_POST['action'] == 'timeTable_date') {
 
                         <?php
                         echo '<div><p>' . 'Class time - ' . $res['class_start_time'] . ' - ' . $res['class_end_time'] . '</div></p>';
-                        if ($res['period_type'] == 2) {
-                            echo ($res['break_time'] == 1) ? 'Tea Break' : 'Lunch Break';
-                        }
 
-                        if ($res['session_type'] == 1) {
-                            if ($res['paper_covered'] != '') {
-                                echo '<p>' . $res['paper_covered'] . '</p>';
-                            } else {
-                                $db->select_one('tbl_topic_master', "topic", $res['topic_id']);
 
-                                foreach ($db->getResult() as $row3) {
-                                    echo '<p>' . $row3['topic'] . '</p>';
+                        if ($res['trng_type'] == 1 || $res['trng_type'] == 2) {
+                            if ($res['period_type'] == 2) {
+                                echo ($res['break_time'] == 1) ? 'Tea Break' : 'Lunch Break';
+                            }
+                            if ($res['session_type'] == 1) {
+
+                                if ($res['paper_covered'] != '') {
+                                    echo  $res['paper_covered'] . '<br>';
+                                } else {
+                                    $db->select_one('tbl_topic_master', "topic", $res['topic_id']);
+
+                                    foreach ($db->getResult() as $row3) {
+                                        echo  $row3['topic'] . '<br>';
+                                    }
                                 }
-                            }
-                            $db->select_one('tbl_paper_master', "paper_code", $res['paper_id']);
+                                $db->select_one('tbl_paper_master', "paper_code", $res['paper_id']);
 
-                            foreach ($db->getResult() as $row4) {
+                                foreach ($db->getResult() as $row4) {
 
-                                echo '<p>' . 'Paper - ' . $row4['paper_code'] . '</p>';
-                            }
-
-                            $faculty_id = explode(',', $res['faculty_id']);
-
-                            foreach ($faculty_id as $faculty) {
-                                $db->select_one('tbl_faculty_master', "name", $faculty);
-
-                                foreach ($db->getResult() as $row1) {
-                                    echo $row1['name'];
-                                    echo '<br>';
+                                    echo 'Paper - ' . $row4['paper_code'] . '<br>';
                                 }
-                            }
-                        } else {
 
-                            if ($res['class_remark'] == '') {
+                                $faculty_id = explode(',', $res['faculty_id']);
 
-                                $db->select_one('other_topic', "name", $res['other_class']);
+                                foreach ($faculty_id as $faculty) {
+                                    $db->select_one('tbl_faculty_master', "name", $faculty);
 
-                                foreach ($db->getResult() as $row3) {
-                                    echo '<p>' . $row3['name'] . '</p>';
+                                    foreach ($db->getResult() as $row1) {
+                                        echo $row1['name'];
+                                        echo '<br>';
+                                    }
                                 }
                             } else {
-                                echo $res['class_remark'];
+                                echo '<div style="margin-top: 10px;font-weight: 600;">';
+                                if ($res['class_remark'] == '') {
+
+                                    $db->select_one('other_topic', "name", $res['other_class']);
+
+                                    foreach ($db->getResult() as $row3) {
+                                        echo  $row3['name'];
+                                    }
+                                } else {
+                                    echo $res['class_remark'];
+                                }
+                            }
+                            echo '</div>';
+                        } else if ($res['trng_type'] == 3 || $res['trng_type'] == 4) {
+                            switch ($res['break_time']) {
+                                case '1':
+                                    echo '<p>Tea Break<p>';
+                                    break;
+                                case '2':
+                                    echo '<p>Lunch Break<p>';
+                                    break;
+                                default:
+
+                                    // echo '<div><p>'.'Class time - '. $res['class_start_time'] .' - '. $res['class_end_time'].'</div></p>';
+
+                                    if ($res['session_type'] == 1) {
+                                        if ($res['paper_covered'] != '') {
+                                            echo '<p>' . $res['paper_covered'] . '</p>';
+                                        } else {
+                                            $db->select_one($subject_tbl, "subject", $res['subject_id']);
+
+                                            foreach ($db->getResult() as $row3) {
+                                                echo '<p>' . $row3['subject'] . '</p>';
+                                            }
+                                        }
+
+
+
+                                        $faculty_id = explode(',', $res['faculty_id']);
+
+                                        foreach ($faculty_id as $faculty) {
+                                            $db->select_one("tbl_faculty_master", "name", $faculty);
+
+                                            foreach ($db->getResult() as $row1) {
+                                                if ($row1['name'] == 'NA') {
+                                                    echo $res['guest_faculty_name'];
+                                                    echo '<br>';
+                                                } else {
+                                                    echo $row1['name'];
+                                                    echo '<br>';
+                                                }
+                                            }
+                                        }
+                                    } else {
+
+                                        if ($res['class_remark'] == '') {
+
+                                            $db->select_one('other_topic', "name", $res['other_class']);
+
+                                            foreach ($db->getResult() as $row3) {
+                                                echo '<p>' . $row3['name'] . '</p>';
+                                            }
+                                        } else {
+                                            echo $res['class_remark'];
+                                        }
+                                    }
+                                    break;
                             }
                         }
                         ?>
@@ -1922,45 +2009,87 @@ if (isset($_POST['action']) && $_POST['action'] == 'timeTable_date') {
                         $new_res = $db->getResult();
                         foreach ($new_res as $new_row) {
                             echo '<div><p>' . 'Class time - ' . $new_row['new_class_start_time'] . ' - ' . $new_row['new_class_end_time'] . '</div></p>';
+                            if ($res['trng_type'] == 1 || $res['trng_type'] == 2) {
+                                if ($new_row['new_session_type'] == 1) {
+                                    if ($new_row['new_paper_covered'] != '') {
+                                        echo '<p>' . $new_row['new_paper_covered'] . '</p>';
+                                    } else {
+                                        $db->select_one('tbl_topic_master', "topic", $new_row['new_topic_id']);
 
-                            if ($new_row['new_session_type'] == 1) {
-                                if ($new_row['new_paper_covered'] != '') {
-                                    echo '<p>' . $new_row['new_paper_covered'] . '</p>';
-                                } else {
-                                    $db->select_one('tbl_topic_master', "topic", $new_row['new_topic_id']);
-
-                                    foreach ($db->getResult() as $row3) {
-                                        echo '<p>' . $row3['topic'] . '</p>';
+                                        foreach ($db->getResult() as $row3) {
+                                            echo '<p>' . $row3['topic'] . '</p>';
+                                        }
                                     }
-                                }
-                                $db->select_one('tbl_paper_master', "paper_code", $new_row['new_paper_id']);
+                                    $db->select_one('tbl_paper_master', "paper_code", $new_row['new_paper_id']);
 
-                                foreach ($db->getResult() as $row4) {
+                                    foreach ($db->getResult() as $row4) {
 
-                                    echo '<p>' . 'Paper - ' . $row4['paper_code'] . '</p>';
-                                }
-
-                                $faculty_id = explode(',', $new_row['new_faculty_id']);
-
-                                foreach ($faculty_id as $faculty) {
-                                    $db->select_one('tbl_faculty_master', "name", $faculty);
-
-                                    foreach ($db->getResult() as $row1) {
-                                        echo $row1['name'];
-                                        echo '<br>';
+                                        echo '<p>' . 'Paper - ' . $row4['paper_code'] . '</p>';
                                     }
-                                }
-                            } else {
-                                if ($new_row['new_class_remark'] == '') {
 
-                                    $db->select_one('other_topic', "name", $new_row['new_other_class']);
+                                    $faculty_id = explode(',', $new_row['new_faculty_id']);
 
-                                    foreach ($db->getResult() as $row3) {
-                                        echo '<p>' . $row3['name'] . '</p>';
+                                    foreach ($faculty_id as $faculty) {
+                                        $db->select_one('tbl_faculty_master', "name", $faculty);
+
+                                        foreach ($db->getResult() as $row1) {
+                                            echo $row1['name'];
+                                            echo '<br>';
+                                        }
                                     }
                                 } else {
-                                    echo $new_row['new_class_remark'];
+                                    if ($new_row['new_class_remark'] == '') {
+
+                                        $db->select_one('other_topic', "name", $new_row['new_other_class']);
+
+                                        foreach ($db->getResult() as $row3) {
+                                            echo '<p>' . $row3['name'] . '</p>';
+                                        }
+                                    } else {
+                                        echo $new_row['new_class_remark'];
+                                    }
                                 }
+                            }else{
+                                if ($new_row['new_session_type'] == 1) {
+                                    if ($new_row['new_paper_covered'] != '') {
+                                        echo '<p>' . $new_row['new_paper_covered'] . '</p>';
+                                    } else {
+                                       
+                                        $db->select_one($subject_tbl, "subject", $new_row['new_subject_id']);
+
+                                        foreach ($db->getResult() as $row3) {
+                                            echo '<p>' . $row3['subject'] . '</p>';
+                                        }
+                                    }
+                                    $db->select_one('tbl_mid_paper_master', "paper_code,paper_title", $new_row['new_paper_id']);
+
+                                    foreach ($db->getResult() as $row4) {
+
+                                        echo '<p>' . $row4['paper_code'].'-'.$row4['paper_title']. '</p>';
+                                    }
+
+                                    $faculty_id = explode(',', $new_row['new_faculty_id']);
+
+                                    foreach ($faculty_id as $faculty) {
+                                        $db->select_one('tbl_faculty_master', "name", $faculty);
+
+                                        foreach ($db->getResult() as $row1) {
+                                            echo $row1['name'];
+                                            echo '<br>';
+                                        }
+                                    }
+                                } else {
+                                    if ($new_row['new_class_remark'] == '') {
+
+                                        $db->select_one('other_topic', "name", $new_row['new_other_class']);
+
+                                        foreach ($db->getResult() as $row3) {
+                                            echo '<p>' . $row3['name'] . '</p>';
+                                        }
+                                    } else {
+                                        echo $new_row['new_class_remark'];
+                                    }
+                                } 
                             }
                         }
                         ?>
@@ -2000,9 +2129,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'timeTable_date') {
                             switch ($row_send['status']) {
                                 case '1':
                         ?>
-                                    <button type="submit" class="btn btn-primary" name="dir_approval" id="dir_approval" onclick="cnf_dirApproval(<?php echo $row_send['time_table_id'] ?>,<?php echo $row_send['session_no'] ?>,'<?php echo $trng_dt ?>')">Director
+                                    <button type="submit" class="btn btn-primary" name="dir_approval" id="dir_approval" onclick="cnf_dirApproval(<?php echo $row_send['time_table_id'] ?>,<?php echo $row_send['session_no'] ?>,'<?php echo $trng_dt ?>',<?php echo $trng_type ?>)">Director
                                         Approval</button>
-                                    <button type="submit" class="btn btn-info mt-2" name="self_approval" id="self_approval" onclick="cnf_selfApproval(<?php echo $row_send['time_table_id'] ?>,<?php echo $row_send['session_no'] ?>,'<?php echo $row_send['training_dt'] ?>')">Self
+                                    <button type="submit" class="btn btn-info mt-2" name="self_approval" id="self_approval" onclick="cnf_selfApproval(<?php echo $row_send['time_table_id'] ?>,<?php echo $row_send['session_no'] ?>,'<?php echo $row_send['training_dt'] ?>',<?php echo $trng_type ?>)">Self
                                         Approval</button>
                         <?php
                                     break;

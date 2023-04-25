@@ -15,7 +15,7 @@
                                             <th style="text-align:center;">Status</th>
                                             <th style="text-align:center;">View</th>
                                             <th style="text-align:center;">Add Session</th>
-                                            <th style="text-align:center;">Action</th>
+                                            <th style="text-align:center;">Action</th> 
 
                                         </thead>
                                         <tbody>
@@ -27,7 +27,7 @@
                                         $db->select('tbl_time_table_range',"*",null,"type = '$trng_type' AND program_id=".$program_id,"from_dt",null);
                                          //print_r( $db->getResult());
                                         foreach($db->getResult() as $row){
-                                            //print_r($row);
+                                           // print_r($row);
                                             $count++;
                                             $from_dt = $row['from_dt'];
                                             $to_dt = $row['to_dt'];
@@ -228,6 +228,44 @@ function get_trngType($prog_id,$table){
         $trng_type = $row['trng_type'];
     }
     return $trng_type ;
+}
+
+function getProgramTable($trng_type){
+      $time_table ='';
+      $program_table='';
+      $subject_tbl = '';
+
+      $result = array();
+     if( $trng_type == 1 || $trng_type == 2){
+         $time_table = 'tbl_time_table';
+         $program_table = 'tbl_program_master';
+         $subject_tbl = 'tbl_subject_master';
+         array_push($result,$time_table,$program_table, $subject_tbl);
+     }
+     elseif($trng_type == 3 || $trng_type == 8){
+              
+         $program_table = 'tbl_mid_program_master';
+         $subject_tbl = 'tbl_mid_syllabus';
+         array_push($result,$program_table, $subject_tbl);
+     }
+     elseif($trng_type == 4 || $trng_type == 5){
+       
+          $program_table = 'tbl_short_program_master';
+          array_push($result,$program_table);
+     }
+
+     if($trng_type == 3 || $trng_type ==4){
+      
+        $time_table = "tbl_inhouse_time_table";
+        array_push($result,$time_table);
+    }
+    else if($trng_type == 5 || $trng_type ==8){
+       
+        $time_table = "tbl_sponsored_time_table.php";
+        array_push($result,$time_table);
+    }
+
+  return  $result;
 }
 
 

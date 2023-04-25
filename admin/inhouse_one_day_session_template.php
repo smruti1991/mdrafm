@@ -238,7 +238,7 @@ for ($i = 1; $i <= $session_no; $i++) {
                     <!-- class room -->
                     <div class="class_room">
 
-                    <div class="topic_div">
+                    <div class="topic_div" style="display:<?php echo ($trng_type ==3)?'':'none' ?>" >
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

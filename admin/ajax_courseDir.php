@@ -7,7 +7,7 @@ include 'database.php';
 
 $db = new Database();
 
-if (isset($_POST['action']) && $_POST['action'] == 'view_timetable_courseDir') {
+if (isset($_POST['action']) && $_POST['action'] == 'view_timetable_courseDir') { 
     
     $program_table =$_POST['program_table'];
     $time_table = $_POST['time_table'];

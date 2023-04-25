@@ -268,6 +268,64 @@ if( isset($_POST['action']) && $_POST['action'] == 'select_detail_topic'){
  
 }
 
+if( isset($_POST['action']) && $_POST['action'] == 'select_mid_paper'){
+
+  $syllabus_id = 0;
+  $program_id = $_POST['program_id'];
+  $mid_paper_id = $_POST['paper_id'];
+
+      $db->select('tbl_mid_program_master', 'syllabus_id', null, 'id=' . $program_id, null, null);
+      foreach ($db->getResult() as $syllabus) {
+          $syllabus_id = $syllabus['syllabus_id'];
+      }
+  
+
+  $count = 0;
+  $paper_sql = "SELECT id,paper_code,paper_title FROM `tbl_mid_paper_master` WHERE status = 1 AND syllabus_id =" . $syllabus_id;
+  $db->select_sql($paper_sql);
+
+  foreach ($db->getResult() as $paper_row) {
+    //print_r($row);
+    $count++
+?>
+    <option value="<?php echo $paper_row['id'] ?>" <?php echo ($mid_paper_id == $paper_row['id'])?'selected':'' ?>>
+        <?php echo $paper_row['paper_code'] . ' - ', $paper_row['paper_title']; ?>
+    </option>
+
+<?php
+}
+
+}
+
+if( isset($_POST['action']) && $_POST['action'] == 'select_mid_subject'){
+ //print_r($_POST);
+  $syllabus_id = 0;
+  $program_id = $_POST['program_id'];
+  $mid_paper_id = $_POST['paper_id'];
+  $subject_id = $_POST['subject_id'];
+
+      $db->select('tbl_mid_program_master', 'syllabus_id', null, 'id=' . $program_id, null, null);
+      foreach ($db->getResult() as $syllabus) {
+          $syllabus_id = $syllabus['syllabus_id'];
+      }
+
+      $count = 0;
+      $subject_sql = "SELECT * FROM `tbl_mid_syllabus` WHERE status = 1 AND paper = '".$mid_paper_id."' AND syllabus_id =" . $syllabus_id;
+      $db->select_sql($subject_sql);
+      // print_r( $db->getResult());
+      foreach ($db->getResult() as $subject_row) {
+          //print_r($row);
+          $count++
+      ?>
+          <option value="<?php echo $subject_row['id'] ?>" <?php echo ($subject_id == $subject_row['id'])?'selected':'' ?>>
+              <?php echo $subject_row['subject'] ?>
+          </option>
+
+      <?php
+      }
+    
+}
+
 
 // fetch edit code
 if( isset($_POST['action']) && $_POST['action'] == 'sub_edit'){
