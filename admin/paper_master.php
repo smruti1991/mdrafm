@@ -121,9 +121,20 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                 
+                                 <?php
+                                   $rules = array(
+                                    'syllabus_id'=>'select',
+                                    'term_id'=>'select',
+                                    'paper_code'=>'required|integer',
+                                    'title'=>'required',
+                                    // "age"=>"required|integer",
+                                   // "email"=>"email|unique:user_details",
+                                    //"contact"=>"required|contactNumber",
+                                   // "gender"=>"required"
+                                   );
+                                 ?>
                                         <button type="submit" class="btn btn-primary" name="submit" value="Save"
-                                            id="save" onclick="add('paper','frm_paper','tbl_paper_master')">Save</button>
+                                            id="save" onclick='add("paper","frm_paper","tbl_paper_master",<?php echo json_encode($rules)  ?>,displayMessage)'>Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -143,6 +154,7 @@
                                <div class="row">
                                     <div class="col-md-4">  
                                       <h4 class="card-title">Paper Master</h4>
+                                      
                                     </div>
                                     <div class="col-md-6"></div>
                                     <div class="col-md-2">
@@ -304,35 +316,32 @@
 
 })
 
-function add(str,frm,tbl){
+function add(str,frm,tbl,rules,callback){
     
     // validate forms
-    let isSyllabusValid = checkDropdown(syllabusEl),
-        istermValid =  checkDropdown(termE1),
-        ispaperCodeValid = checkTextField(paperCodeE1),
-        istitleValid = checkTextField(titleE1);
+    // let isSyllabusValid = checkDropdown(syllabusEl),
+    //     istermValid =  checkDropdown(termE1),
+    //     ispaperCodeValid = checkTextField(paperCodeE1),
+    //     istitleValid = checkTextField(titleE1);
 
-    let isFormValid = isSyllabusValid &&
-                        istermValid &&
-                        ispaperCodeValid &&
-                        istitleValid;
+    // let isFormValid = isSyllabusValid &&
+    //                     istermValid &&
+    //                     ispaperCodeValid &&
+    //                     istitleValid;
+    //console.log(rules);
 
+    let isFormValid = true;
     var update_id = $('#update_id').val();
     if(isFormValid){
         $.ajax({
         type: "POST",
         url: "ajax_master.php",
-        
-        data:  $('#'+frm).serialize() + '&'+$.param({ 'action': 'add','table':tbl,'update_id': update_id}),
+       // dataType: "json",
+        data:  $('#'+frm).serialize() + '&'+$.param({ 'action': 'add','table':tbl,'update_id': update_id,rules:rules}),
         success: function(res) {
+
             console.log(res);
-            let elm = res.split('#');
-            //console.log(elm[0]);
-            if (elm[0] == "success") {
-                sessionStorage.message =  str +' '+ elm[1]; 
-                sessionStorage.type = "success";
-                location.reload();
-            }
+            callback(res);
         }
     })
     }

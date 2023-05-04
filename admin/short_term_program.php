@@ -88,6 +88,7 @@
                                                         <label><strong>Program Name</strong></label>
                                                         <input type="text" class="form-control" name="prg_name"
                                                             id="prg_name" placeholder="Enter Program Name">
+                                                            <small></small>
                                                     </div>
                                                 </div>
 
@@ -110,6 +111,7 @@
                                                             <label><strong>Name</strong></label>
                                                             <input type="text" class="form-control" name="dept_name"
                                                                 id="dept_name" placeholder="Enter Department Name">
+                                                                <small></small>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -117,6 +119,7 @@
                                                             <label><strong> Email</strong></label>
                                                             <input type="text" class="form-control" name="dept_email"
                                                                 id="dept_email" placeholder="Enter Department Email">
+                                                                <small></small>
                                                         </div>
                                                     </div>
 
@@ -137,6 +140,7 @@
                                                         <div class="col-md-10">
                                                             <input type="date" class="form-control" name="start_date"
                                                                 id="start_date" placeholder="Select Date">
+                                                                <small></small>
                                                         </div>
 
                                                     </div>
@@ -147,6 +151,7 @@
                                                         <div class="col-md-10">
                                                             <input type="date" class="form-control" name="end_date"
                                                                 id="end_date" placeholder="Select Date">
+                                                                <small></small>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -155,6 +160,7 @@
                                                         <label><strong> Hall Name</strong></label>
                                                         <input type="text" class="form-control" name="hall_name"
                                                             id="hall_name" placeholder="Enter Hall Name">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -183,6 +189,7 @@
                                                             <label><strong>Email Subject</strong></label>
                                                             <input type="text" class="form-control" name="email_sub"
                                                                 id="email_sub" placeholder="Enter Email Subject">
+                                                                <small></small>
                                                         </div>
                                                     </div>
 
@@ -196,6 +203,7 @@
                                                                 style="border: 1px solid rgb(79 67 67);border-radius:5px; max-height: 250px;height: 150px;">
 
                                                             </textarea>
+                                                            <small></small>
                                                             <!-- <input type="text" class="form-control" name="email_sub"
                                                                 id="email_sub" placeholder="Enter Email Subject"> -->
                                                         </div>
@@ -210,10 +218,24 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
+                                        <?php
+                                            $rules = array(
+                                                'prg_name'=>'required',
+                                                'dept_name'=>'required',
+                                                'dept_email'=>'required|email',
+                                                'start_date'=>'required',
+                                                'end_date'=>'required',
+                                                'hall_name'=>'required', 
+                                                'email_sub'=>'required', 
+                                                'hall_name'=>'required',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            'syllabus_id'=>'select',
+                                           
+                                        );
+                                        ?>
 
                                         <button type="submit" class="btn btn-primary" name="submit" value="Save"
                                             id="save"
-                                            onclick="add('Short Term Program','short_frm_program','tbl_short_program_master')">Save</button>
+                                            onclick='add("Short Term Program","short_frm_program","tbl_short_program_master",<?php echo json_encode($rules)  ?>,displayMessage)'>Save</button>
+                                           
                                     </div>
                                 </div>
                             </div>
@@ -239,19 +261,11 @@
                                                     <div class="form-group">
                                                         <label><strong>Program Name</strong></label>
                                                         <input type="text" class="form-control" name="prg_name"
-                                                            id="prg_name" placeholder="Enter Program Name">
+                                                            id="iprg_name" placeholder="Enter Program Name">
+                                                            <small></small>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label><strong> Tranning Type</strong></label>
-                                                        <select class="custom-select mr-sm-2" name="trng_type" id="trng_type">
-                                                            <option value="4" selected>Short Term Program</option>
-                                                            
-                                                        </select>
-                                                    </div>
-                                                </div> -->
-
+                                              
 
                                             </div>
 
@@ -260,14 +274,16 @@
                                                     <div class="form-group">
                                                         <label><strong>Tranning Start Date</strong></label>
                                                         <input type="date" class="form-control" name="start_date"
-                                                            id="start_date" placeholder="Select Date">
+                                                            id="istart_date" placeholder="Select Date">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label><strong>Tranning End Date</strong></label>
                                                         <input type="date" class="form-control" name="end_date"
-                                                            id="end_date" placeholder="Select Date">
+                                                            id="iend_date" placeholder="Select Date">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -279,10 +295,17 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
+                                    <?php
+                                            $rules = array(
+                                                'prg_name'=>'required',
+                                                'start_date'=>'required',
+                                                'end_date'=>'required',
+                                        );
+                                        ?>
 
                                         <button type="submit" class="btn btn-primary" name="submit" value="Save"
                                             id="save"
-                                            onclick="add('Subject','frm_program','tbl_short_program_master')">Save</button>
+                                            onclick='add("Subject","frm_program","tbl_short_program_master",<?php echo json_encode($rules)  ?>,displayMessage)'>Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -641,6 +664,21 @@
 </html>
 
 <script type="text/javascript">
+
+    const prg_nameEl = document.querySelector('#prg_name');
+    const dept_nameE1 = document.querySelector('#dept_name');
+    const dept_emailE1 = document.querySelector('#dept_email');
+    const start_dateE1 = document.querySelector('#start_date');
+    const end_dateEl = document.querySelector('#end_date');
+    const hall_nameE1 = document.querySelector('#hall_name');
+    const email_subE1 = document.querySelector('#email_sub');
+    const email_contentE1 = document.querySelector('#email_content');
+
+    const iprg_nameEl = document.querySelector('#iprg_name');
+    const istart_dateE1 = document.querySelector('#istart_date');
+    const iend_dateEl = document.querySelector('#iend_date');
+//console.log(prg_nameEl)
+
 function addProgram() {
     let trng_type = $('#trng_type').val();
     // alert(trng_type); 
@@ -655,11 +693,40 @@ function addProgram() {
 
 
 
-function add(str, frm, tbl) {
+function add(str, frm, tbl, rules,callback) {
+
+console.log(frm);
+ let isFormValid='';
+    // validate forms
+    if(frm === 'short_frm_program'){
+        let isPrgNameValid = checkTextField(prg_nameEl),
+        isDeptNameValid =  checkTextField(dept_nameE1),
+        isDeptEmailValid = checkTextField(dept_emailE1),
+        isStartDateValid = checkTextField(start_dateE1),
+        isEndDateValid = checkTextField(end_dateEl),
+        isHallNameValid =  checkTextField(hall_nameE1),
+        isEmailSubValid = checkTextField(email_subE1),
+        isEmailContentValid = checkTextField(email_contentE1);
 
 
+     isFormValid = isPrgNameValid &&
+                        isDeptNameValid &&
+                        isDeptEmailValid &&
+                        isStartDateValid&&
+                        isEndDateValid &&
+                        isHallNameValid &&
+                        isEmailSubValid&&
+                        isEmailContentValid
+    }else{
+        let isPrgNameValid = checkTextField(iprg_nameEl),
+            isStartDateValid = checkTextField(istart_dateE1),
+            isEndDateValid = checkTextField(iend_dateEl)
+        
+         isFormValid = isPrgNameValid && isStartDateValid && isEndDateValid;
+    }
+    
     var update_id = $('#update_id').val();
-
+    if(isFormValid){
     $.ajax({
         type: "POST",
         url: "ajax_master.php",
@@ -667,18 +734,15 @@ function add(str, frm, tbl) {
         data: $('#' + frm).serialize() + '&' + $.param({
             'action': 'add',
             'table': tbl,
-            'update_id': update_id
+            'update_id': update_id,
+             rules:rules
         }),
         success: function(res) {
             console.log(res);
-            let elm = res.split('#');
-            if (elm[0] == "success") {
-                sessionStorage.message = 'Program Added Successfully';
-                sessionStorage.type = "success";
-                location.reload();
-            }
+            callback(res);
         }
     })
+}
 
 }
 

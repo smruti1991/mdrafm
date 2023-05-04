@@ -150,7 +150,7 @@
                                     <div class="col-md-2" style="float:right">
                                         <input type="button" class="btn btn-primary" id="save" value="Add" 
                                         onclick="add('Other Program','program','tbl_other_program')"
-                                        style="margin-top: 0px:" />
+                                        style="margin-top: 0px" />
                                     </div>
                                    
                                 </form>

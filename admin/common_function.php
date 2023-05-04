@@ -230,5 +230,16 @@ function get_trngType($prog_id,$table){
     return $trng_type ;
 }
 
+// server side validation
+//clean input fields
+
+function clean_input($string)
+{
+    $string = trim($string);
+    $string = stripslashes($string);
+    $string = htmlspecialchars($string);
+    return $string;
+}
+
 
 ?>

@@ -1,15 +1,19 @@
 <?php
    session_start();
-
+ 
 
    //print_r($_SESSION);
    $user_id = (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 )? $_SESSION['user_id'] : -1;
+
+
 
    if($user_id == -1)
   {
 	  header('location:../login.php');
 	  exit;
   }
+
+  $_SESSION['csrf_token'] = bin2hex(openssl_random_pseudo_bytes(32));
 ?>
 <!-- <meta charset="utf-8" /> -->
 <!-- <meta http-equiv="content-type" content="text/html;charset=utf-8" /> -->
@@ -167,3 +171,4 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .modal { overflow: auto !important; }
 
   </style>
+

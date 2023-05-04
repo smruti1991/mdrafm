@@ -49,7 +49,23 @@
     <script src="assets/js/jquery.dataTables.min.js"></script>
     <script src="assets/js/dataTables.bootstrap4.min.js"></script>
     
-   
+    <script>
+  window.csrf = {
+    csrf_token: '<?php echo $_SESSION['csrf_token']; ?>'
+  };
+  $.ajaxSetup({
+    data: window.csrf
+  });
+  jQuery(document).ready(function() {
+    jQuery("form").each(function() {
+      var tokenElement = jQuery(document.createElement('input'));
+      tokenElement.attr('type', 'hidden');
+      tokenElement.attr('name', 'csrf_token');
+      tokenElement.val('<?= $_SESSION['csrf_token'] ?>');
+      jQuery(this).append(tokenElement);
+    });
+  });
+</script>
     <script>
         
 $('input[name="faculty"]').click(function() {

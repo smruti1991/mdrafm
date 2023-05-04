@@ -3,7 +3,7 @@
 class Database
 {
 
-   private $db_host = 'localhost';
+       private $db_host = 'localhost';
        private $db_user = 'root';
        private $db_pass = '';
        private $db_name = 'mdrafm';
@@ -205,9 +205,7 @@ class Database
     function SecureSql($str)
     {
         $str = @trim($str);
-        /*		if(get_magic_quotes_gpc()) {
-			$str = stripslashes($str);
-		}*/
+       
         $str = stripslashes($str);
         $str = ltrim($str);
         $str = rtrim($str);

@@ -78,8 +78,8 @@
                     <div class="col-md-4">
                         <div id="alert_msg" class="alert alert-success">added successfully</div>
                     </div>
-                    <div class="col-md-8">
-                        <!-- Modal -->
+                    <!-- <div class="col-md-8">
+                       
                         <div class="modal fade" id="termModal" tabindex="-1" aria-labelledby="termModalLabel"
                             aria-hidden="true">
                             <div class="modal-dialog">
@@ -161,21 +161,21 @@
                                             <div class="row">
                                                 <div class="col-md-4 pr-1">
                                                     <div class="form-group">
-                                                        <!-- <label><strong>State</strong></label> -->
+                                                       
                                                         <input type="text" class="form-control" name="state" id="state"
                                                             placeholder="State">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 px-1">
                                                     <div class="form-group">
-                                                        <!-- <label><strong>District</strong></label> -->
+                                                      
                                                         <input type="text" class="form-control" name="district"
                                                             id="district" placeholder="District">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 pl-1">
                                                     <div class="form-group">
-                                                        <!-- <label><strong>Pin Code</strong></label> -->
+                                                      
                                                         <input type="number" class="form-control" name="pin" id="pin"
                                                             placeholder="PIN Code">
                                                     </div>
@@ -199,7 +199,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> -->
 
                 </div>
                 <div class="row">
@@ -240,13 +240,14 @@
                                                 WHERE p.id = '" . $_POST['id'] . "' ";
                                             break;
                                         case '4':
-                                            $sql = "SELECT p.id,p.prg_name,t.type,p.course_director,p.start_date,p.end_date,p.status
+                                            $sql = "SELECT p.id,p.prg_name,t.type,d.course_director,d.asst_course_director,p.start_date,p.end_date,p.status
                                                     FROM $program_table p 
                                                     JOIN `tbl_training_type` t ON p.trng_type=t.id
+                                                    JOIN `tbl_program_directors` d ON p.course_director_id = d.id
                                                     WHERE p.id = '" . $_POST['id'] . "' ";
                                             break;
                                     }
-                                   // echo $sql;
+                                    //echo $sql;
                                     $coDir = '';
                                     $asst_coDir = '';
 
@@ -373,6 +374,7 @@
                                                         <label><strong> Name</strong></label>
                                                         <input type="text" class="form-control" name="name" id="name"
                                                             placeholder="Enter Name">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -380,6 +382,7 @@
                                                         <label><strong> HRMS Id</strong></label>
                                                         <input type="text" class="form-control" name="hrms_id"
                                                             id="hrms_id" placeholder="Enter HRMS Id">
+                                                            <small></small>
                                                     </div>
                                                 </div>
 
@@ -390,6 +393,7 @@
                                                         <label><strong>Designation</strong></label>
                                                         <input type="text" class="form-control" name="designation"
                                                             id="designation" placeholder="Enter Designation">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -397,6 +401,7 @@
                                                         <label><strong>Name of the Office</strong></label>
                                                         <input type="text" class="form-control" name="office_name"
                                                             id="office_name" placeholder="Name of the Office">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -407,6 +412,7 @@
                                                         <label><strong> Email</strong></label>
                                                         <input type="email" class="form-control" name="email" id="email"
                                                             placeholder=" Enter Email">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -414,11 +420,12 @@
                                                         <label><strong> Phone</strong></label>
                                                         <input type="text" class="form-control" name="phone" id="phone"
                                                             placeholder=" Enter Phone Number">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                             </div>
 
-
+                                                
 
                                             <input type="hidden" id="update_id">
                                             <input type="hidden" id="program_id" name="program_id"
@@ -426,16 +433,29 @@
                                             <input type="hidden" name="trng_type"
                                                 value="<?php echo $_POST['trng_type']; ?>" />
                                         </form>
+                                        <?php
+                                          $rules = array(
+                                            'name'=>'required',
+                                            'hrms_id'=>'required',
+                                            'designation'=>'required',
+                                            'title'=>'required',
+                                            "office_name"=>"required",
+                                            "email"=>"email|unique:tbl_mid_trainee_registration:".$_POST['id'].":".$_POST['trng_type'],
+                                            "phone"=>"contactNumber|unique:tbl_mid_trainee_registration:".$_POST['id'].":".$_POST['trng_type'],
+                                          
+                                           );
+                                          
+                                        ?>
                                         <div class="d-flex justify-content-center ">
                                             <button type="submit" class="btn btn-primary" name="submit" value="Save"
                                                 id="save"
-                                                onclick="add('new tranee','frm_newTranee','tbl_mid_trainee_registration')">Save</button>
+                                                onclick='add("new tranee","frm_newTranee","tbl_mid_trainee_registration",<?php echo json_encode($rules)  ?>,displayMessage)''>Save</button>
                                         </div>
 
                                     </div>
                                     <!-- end menu1 -->
                                     <div id="home" style="float:none;margin:auto;line-height:1px"
-                                        class="col-lg-10"  tab-pane <?php if($_POST['trng_type'] == 1){ echo 'active'; } ?> ">
+                                        class="col-lg-10"  tab-pane <?php if($_POST['trng_type'] == 1){ echo 'active'; } ?> >
                                         <br>
 
                                         <div id="term2" class=" table table-responsive table-striped table-hover">
@@ -1007,7 +1027,7 @@ function view_trainee_dtl(user_id, status, id) {
 
 }
 
-function add(str, frm, tbl) {
+function add(str, frm, tbl,rules,callback) {
 
 
     var update_id = $('#update_id').val();
@@ -1019,16 +1039,12 @@ function add(str, frm, tbl) {
         data: $('#' + frm).serialize() + '&' + $.param({
             'action': 'add',
             'table': tbl,
+            rules:rules,
             'update_id': update_id
         }),
         success: function(res) {
             console.log(res);
-            let elm = res.split('#');
-            if (elm[0] == "success") {
-                sessionStorage.message = str + ' ' + elm[1];
-                sessionStorage.type = "success";
-                location.reload();
-            }
+            callback(res);
         }
     })
 
@@ -1060,45 +1076,45 @@ function update(str, frm, tbl, id) {
 
 }
 
-function edit(id) {
+// function edit(id) {
 
-    $.ajax({
-        type: "POST",
-        url: "ajax_master.php",
-        dataType: "json",
-        data: {
-            action: "edit",
-            table: "tbl_tranee_registration",
-            edit_id: id
+//     $.ajax({
+//         type: "POST",
+//         url: "ajax_master.php",
+//         dataType: "json",
+//         data: {
+//             action: "edit",
+//             table: "tbl_tranee_registration",
+//             edit_id: id
 
-        },
-        success: function(res) {
-            console.log(res);
-            res.map((data) => {
+//         },
+//         success: function(res) {
+//             console.log(res);
+//             res.map((data) => {
 
-                    $('#update_id').val(data.id);
-                    $('#name').val(data.name);
-                    $('#service_No').val(data.service_no);
-                    $('#dob').val(data.dob);
-                    $('#sex').val(data.sex);
-                    $('#email').val(data.email);
-                    $('#phone').val(data.phone);
-                    $('#address').val(data.address);
-                    $('#state').val(data.state);
-                    $('#district').val(data.district);
-                    $('#pin').val(data.pin);
-                    $('#program_id').val(data.program_id);
+//                     $('#update_id').val(data.id);
+//                     $('#name').val(data.name);
+//                     $('#service_No').val(data.service_no);
+//                     $('#dob').val(data.dob);
+//                     $('#sex').val(data.sex);
+//                     $('#email').val(data.email);
+//                     $('#phone').val(data.phone);
+//                     $('#address').val(data.address);
+//                     $('#state').val(data.state);
+//                     $('#district').val(data.district);
+//                     $('#pin').val(data.pin);
+//                     $('#program_id').val(data.program_id);
 
-                    $('#save').html('Update');
-                    $('#save').attr('id', 'update');
-                    $('#termModal').modal('show');
-                }
+//                     $('#save').html('Update');
+//                     $('#save').attr('id', 'update');
+//                     $('#termModal').modal('show');
+//                 }
 
-            )
+//             )
 
-        }
-    })
-}
+//         }
+//     })
+// }
 
 function cnfBox(id) {
     //alert(id);

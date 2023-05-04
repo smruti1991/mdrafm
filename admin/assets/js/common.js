@@ -156,7 +156,7 @@ $(document).ready(function() {
     });
 });
 
-// show messges
+// show messges 
 
 function showMessage(){
 	if ( sessionStorage.type=="success" ) {
@@ -184,6 +184,35 @@ function closeAlertBox(){
 window.setTimeout(function () {
 $("#alert_msg").fadeOut(300)
 }, 3000);
+}
+
+function displayMessage(res){
+    $('small').text('');
+            
+    let elm = res.split('#');
+    let str = "";
+    //console.log(elm);754006
+    if (elm[0] == "success") {
+        sessionStorage.message =  str +' '+ elm[1]; 
+        sessionStorage.type = "success";
+        location.reload();
+    }
+    if (elm[0] == "error"){
+       // console.log(elm);
+        const  msg = elm[1].split(':');
+        const errorMsg = (msg[0]=='message')?msg[1]:'';
+
+        const  field = elm[2].split(':');
+        const errorField = (field[0]=='fieldName')?field[1]:'';
+        console.log(errorField);
+        if(elm[3]==='select'){
+            $(`#${errorField}`).siblings('small').text(errorMsg).css({'color':"red"});
+        }else{
+            $(`input[name="${errorField}"`).siblings('small').text(errorMsg).css({'color':"red"});
+        }
+        
+        
+    }
 }
 
 function add_course_dir(id,course_dir,roll,trng_type,tbl) {
