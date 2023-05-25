@@ -125,7 +125,7 @@
                                    $rules = array(
                                     'syllabus_id'=>'select',
                                     'term_id'=>'select',
-                                    'paper_code'=>'required|integer',
+                                    'paper_code'=>'required|integer,Paper Coode',
                                     'title'=>'required',
                                     // "age"=>"required|integer",
                                    // "email"=>"email|unique:user_details",

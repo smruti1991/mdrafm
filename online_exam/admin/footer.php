@@ -8,7 +8,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Webslesson <?php echo date('Y'); ?></span>
+                        <span>Copyright &copy; MDRAFM <?php echo date('Y'); ?></span>
                     </div>
                 </div>
             </footer>
@@ -66,6 +66,7 @@
     <script type="text/javascript" src="../vendor/datepicker/bootstrap-datepicker.js"></script>
 
     <script type="text/javascript" src="../vendor/datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="../vendor/TimeCircle/TimeCircles.js"></script>
 
 </body>
 

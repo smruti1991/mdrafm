@@ -2,9 +2,9 @@
 
 //login_action.php
 
-include('soes.php');
+include('database.php');
 
-$object = new soes();
+$object = new database();
 
 if(isset($_POST["user_email"]))
 {

@@ -979,10 +979,10 @@
                             case '4':
 
                              $sql = "SELECT program_id,trng_type FROM `tbl_dept_trainee_registration` WHERE phone= '".$_SESSION['username']."'
-                                     UNION SELECT program_id,trng_type FROM `tbl_new_recruite` WHERE phone='".$_SESSION['username']."'
+                                     UNION SELECT program_id,trng_type FROM `tbl_new_recruite` WHERE phone='".$_SESSION['username']."' 
                                      UNION SELECT program_id,trng_type FROM `tbl_mid_trainee_registration` WHERE phone='".$_SESSION['username']."' ";
                            
-                                     //echo $sql;
+                                    // echo $sql;
                                 //echo $_SESSION['username'];
                                   $db->select_sql($sql);
                                   $prog_id = 0;
@@ -1182,7 +1182,7 @@
                 </div>
             <?php
                           break;
-                          case '12':
+                          case '15':
                             ?>
             <li class="active ">
                 <hr style="width: 90%;border-top: 2px solid rgb(135 167 169);">
@@ -1190,7 +1190,7 @@
 
                     <i class="now-ui-icons design_app"></i>
 
-                    <p>Course Director</p>
+                    <p>Course Director1</p>
                 </a>
 
             </li>

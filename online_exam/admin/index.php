@@ -1,16 +1,14 @@
 
 <?php
 
-include('soes.php');
+include('database.php');
 
-$object = new soes();
+$object = new database();
 
 if($object->is_login())
 {
     header("location:".$object->base_url."admin/dashboard.php");
 }
-
-
 
 ?>
 
@@ -88,7 +86,7 @@ if($object->is_login())
 
 <script>
 
-$(document).ready(function(){
+$(document).ready(function(){ 
 
     $('#login_form').parsley();
 

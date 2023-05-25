@@ -2,10 +2,10 @@
 
 //ajax_action.php
 
-include('admin/soes.php');
+include('admin/database.php');
 
-$object = new soes();
-
+$object = new database();
+//print_r($_POST);
 if(isset($_POST['page']))
 {
 	if($_POST['page'] == 'login')
@@ -16,21 +16,21 @@ if(isset($_POST['page']))
 			$error = '';
 			$url = '';
 			$data = array(
-				':student_email_id'	=>	$_POST["student_email_id"]
+				':username'	=>	$_POST["username"]
 			);
 
 			$object->query = "
-				SELECT * FROM student_soes 
-				WHERE student_email_id = :student_email_id
+				SELECT * FROM tbl_user 
+				WHERE username = :username AND status = 1
 			";
 
 			$object->execute($data);
 
-			$total_row = $object->row_count();
+			 $total_row = $object->row_count();
 
 			if($total_row == 0)
 			{
-				$error = '<div class="alert alert-danger">Wrong Email Address</div>';
+				$error = '<div class="alert alert-danger">Wrong Username</div>';
 			}
 			else
 			{
@@ -38,14 +38,47 @@ if(isset($_POST['page']))
 
 				foreach($result as $row)
 				{
-					if($row['student_email_verified'] == 'Yes')
-					{
-						if($row["student_status"] == 'Enable')
+					//print_r($row);
+						if($row["status"] == 1)
 						{
-							if($_POST["student_password"] == $row["student_password"])
+							$validPassword = password_verify($_POST["password"],$row["password"]);
+							if( $validPassword )
 							{
-								$_SESSION['student_id'] = $row['student_id'];
-								$url = $object->base_url . 'student_dashboard.php';
+								
+								$_SESSION['user_id'] = $row['id'];
+								$_SESSION['username'] = $row['username'];
+								$roll_id =  explode(',',$row['roll_id']);
+								
+								foreach($roll_id as $roll){
+									
+                                  switch ($roll) {
+									case '9':
+
+										$_SESSION['user_type'] ='Examiner';
+										$url = $object->base_url . 'admin/dashboard.php';
+										break;
+									case '4':
+
+										$_SESSION['user_type'] ='Examinee';
+										$url = $object->base_url . 'admin/dashboard.php';
+										break;
+									
+									default:
+										# code...
+										break;
+								  }
+								}
+								if($row['roll_id'] == '18')
+								{
+									$_SESSION['user_type'] ='Master';
+									$url = $object->base_url . 'admin/dashboard.php';
+								}
+								// else
+								// {
+								// 	//$url = $object->base_url . 'admin/result.php';
+								// 	$url = $object->base_url . 'student_dashboard.php';
+								// }
+								
 							}
 							else
 							{
@@ -56,11 +89,8 @@ if(isset($_POST['page']))
 						{
 							$error = '<div class="alert alert-danger">Sorry, Your account has been disable, contact Admin</div>';
 						}
-					}
-					else
-					{
-						$error = '<div class="alert alert-danger">You have not verify you email address, so for email verification, click <a href="resend_email_verification.php">here</a></div>';
-					}
+					
+					
 				}
 			}
 
@@ -73,82 +103,7 @@ if(isset($_POST['page']))
 		}
 	}
 
-	if($_POST['page'] == 'resend_email_verificaiton')
-	{
-		if($_POST['action'] == 'send_verificaton_email')
-		{
-			sleep(2);
-			$error = '';
-			$data = array(
-				':student_email_id'	=>	$_POST["student_email_id"]
-			);
 
-			$object->query = "
-				SELECT * FROM student_soes 
-				WHERE student_email_id = :student_email_id
-			";
-
-			$object->execute($data);
-
-			$total_row = $object->row_count();
-
-			if($total_row == 0)
-			{
-				$error = '<div class="alert alert-danger">Email Address Not Found</div>';
-			}
-			else
-			{
-				$result = $object->statement_result();
-
-				foreach($result as $row)
-				{
-					if($row['student_email_verified'] == 'No')
-					{
-						$verification_code = md5(uniqid());
-						$data = array(
-							':student_email_verification_code'		=>	$verification_code,
-							':student_id'							=>	$row["student_id"]
-						);
-
-						$object->query = "
-						UPDATE student_soes 
-						SET student_email_verification_code = :student_email_verification_code 
-						WHERE student_id = :student_id
-						";
-
-						$object->execute($data);
-
-						require_once('class/class.phpmailer.php');
-
-						$subject = 'Student Verification Email for Online Exam System';
-
-						$body = '
-						<p>Hello '.$row["student_name"].'.</p>
-						<p>This is a verification eMail for your '.$row["student_email_id"].' email address, and without email verification you can not take part in online exam, So please click the link to verify your eMail address by clicking this <a href="'.$object->base_url.'verify_email.php?type=student&code='.$verification_code.'" target="_blank"><b>link</b></a>.</p>
-						<p>In case if you have any difficulty please eMail us.</p>
-						<p>Thank you,</p>
-						<p>Online Student Exam System</p>
-						';
-
-						$object->send_email($row["student_email_id"], $subject, $body);
-
-						$error = '<div class="alert alert-success">Verification eMail has been send to <b>'.$row["student_email_id"].'</b></div>';
-
-					}
-					else
-					{
-						$error = '<div class="alert alert-info">Your email already verified, so you can login into system, by click <a href="login.php">here</a></div>';
-					}
-				}
-			}
-
-			$output = array(
-				'error'		=>	$error,
-			);
-
-			echo json_encode($output);
-		}
-	}
 
 	if($_POST['page'] == 'forget_password')
 	{
@@ -492,46 +447,58 @@ if(isset($_POST['page']))
 			if($_POST['question_id'] == '')
 			{
 				$direction = '';
-				if($_SESSION['student_id'] % 2)
-				{
-					$direction = 'ASC';
-				}
-				else
-				{
-					$direction = 'DESC';
-				}
+				// if($_SESSION['user_id'] % 2)
+				// {
+				// 	$direction = 'ASC';
+				// }
+				// else
+				// {
+				// 	$direction = 'DESC';
+				// }
+				// echo ("SELECT a.*,q.exam_subject_question_title FROM `tbl_exam_question_answer` a 
+				// JOIN `exam_subject_question` q ON a.exam_question_id = q.exam_subject_question_id
+				// WHERE a.trainee_exam_info_id = '".$_POST["trainee_exam_info_id"]."' 
+				// ORDER BY a.exam_question_id ".$direction." 
+				// LIMIT 1");
+
 				$object->query = "
-				SELECT * FROM exam_subject_question_soes 
-				WHERE exam_id = '".$_POST["exam_id"]."' 
-				AND exam_subject_id = '".$_POST["exam_subject_id"]."' 
-				ORDER BY exam_subject_question_id ".$direction." 
+				SELECT a.*,q.exam_subject_question_title FROM `tbl_exam_question_answer` a 
+				JOIN `exam_subject_question` q ON a.exam_question_id = q.exam_subject_question_id
+				WHERE a.trainee_exam_info_id = '".$_POST["trainee_exam_info_id"]."' 
+				
 				LIMIT 1
 				";
 			}
 			else
 			{
+				
+
 				$object->query = "
-				SELECT * FROM exam_subject_question_soes 
-				WHERE exam_subject_question_id = '".$_POST["question_id"]."' 
+				SELECT a.*,q.exam_subject_question_title FROM `tbl_exam_question_answer` a 
+				JOIN `exam_subject_question` q ON a.exam_question_id = q.exam_subject_question_id
+				WHERE q.exam_subject_question_id = '".$_POST["question_id"]."'  AND a.trainee_exam_info_id = '".$_POST["trainee_exam_info_id"]."'  
+				
 				";
 			}
 
 			$result = $object->get_result();
 
 			$output = '';
-
+          
 			foreach($result as $row)
 			{
+				//print_r($row);
+            
 				$output .= '
 				<div class="card">
-					<div class="card-header"><b>Question - </b>'.$row["exam_subject_question_title"].'</div>
+					<div class="card-header"><b>Question - '.$row["qstn_sl_no"].' </b>'.$row["exam_subject_question_title"].'</div>
 					<div class="card-body">
-						<div class="row">
+						<div class="row" style="margin:3rem">
 				';
 
 				$object->query = "
-				SELECT * FROM question_option_soes 
-				WHERE exam_subject_question_id = '".$row['exam_subject_question_id']."'
+				SELECT * FROM question_option 
+				WHERE exam_subject_question_id = '".$row['exam_question_id']."'
 				";
 				$sub_result = $object->get_result();
 
@@ -542,7 +509,7 @@ if(isset($_POST['page']))
 				{
 					$is_checked = '';
 
-					if($object->Get_student_question_answer_option($row['exam_subject_question_id'], $_SESSION['student_id']) == $count)
+					if($object->Get_student_question_answer_option($row['exam_question_id'], $row['trainee_exam_info_id']) == $count)
 					{
 						$is_checked = 'checked';
 					}
@@ -550,7 +517,7 @@ if(isset($_POST['page']))
 					$output .= '
 					<div class="col-md-6 mb-4">
 						<div class="radio">
-							<label><b>'.$temp_array[$temp_count].'.&nbsp;&nbsp;</b><input type="radio" name="option_1" class="answer_option" data-question_id="'.$row['exam_subject_question_id'].'" data-id="'.$count.'" '.$is_checked.'> '.$sub_row["question_option_title"].'</label>
+							<label><b>'.$temp_array[$temp_count].'.&nbsp;&nbsp;</b><input type="radio" name="option_1" class="answer_option" data-question_id="'.$row['exam_question_id'].'" data-id="'.$count.'" '.$is_checked.'> '.$sub_row["question_option_title"].'</label>
 						</div>
 					</div>
 					';
@@ -561,11 +528,10 @@ if(isset($_POST['page']))
 				</div>
 				';
 				$object->query = "
-				SELECT exam_subject_question_id FROM exam_subject_question_soes 
-				WHERE exam_subject_question_id < '".$row['exam_subject_question_id']."' 
-				AND exam_id = '".$_POST["exam_id"]."' 
-				AND exam_subject_id = '".$_POST["exam_subject_id"]."' 
-				ORDER BY exam_subject_question_id DESC 
+				SELECT exam_question_id FROM tbl_exam_question_answer 
+				WHERE qstn_sl_no < '".$row['qstn_sl_no']."' 
+				AND trainee_exam_info_id = '".$_POST["trainee_exam_info_id"]."' 
+				ORDER BY qstn_sl_no DESC 
 				LIMIT 1";
 
 				$previous_result = $object->get_result();
@@ -575,27 +541,26 @@ if(isset($_POST['page']))
 
 				foreach($previous_result as $previous_row)
 				{
-					$previous_id = $previous_row['exam_subject_question_id'];
+					$previous_id = $previous_row['exam_question_id'];
 				}
 
 				$object->query = "
-				SELECT exam_subject_question_id FROM exam_subject_question_soes 
-				WHERE exam_subject_question_id > '".$row['exam_subject_question_id']."' 
-				AND exam_id = '".$_POST["exam_id"]."' 
-				AND exam_subject_id = '".$_POST["exam_subject_id"]."' 
-				ORDER BY exam_subject_question_id ASC 
+				SELECT exam_question_id FROM tbl_exam_question_answer 
+				WHERE qstn_sl_no > '".$row['qstn_sl_no']."' 
+				AND trainee_exam_info_id = '".$_POST["trainee_exam_info_id"]."' 
+				ORDER BY qstn_sl_no ASC 
 				LIMIT 1";
   				
   				$next_result = $object->get_result();
 
   				foreach($next_result as $next_row)
 				{
-					$next_id = $next_row['exam_subject_question_id'];
+					$next_id = $next_row['exam_question_id'];
 				}
 
 				$if_previous_disable = '';
 				$if_next_disable = '';
-
+                $nextBtn = 'Save & Next';
 				if($previous_id == "")
 				{
 					$if_previous_disable = 'disabled';
@@ -603,13 +568,16 @@ if(isset($_POST['page']))
 				
 				if($next_id == "")
 				{
-					$if_next_disable = 'disabled';
+					//$if_next_disable = 'disabled';
+					$nextBtn = 'Save';
 				}
 
 				$output .= '
 				  	<div align="center">
 				   		<button type="button" name="previous" class="btn btn-info btn-lg previous" id="'.$previous_id.'" '.$if_previous_disable.'>Previous</button>
-				   		<button type="button" name="next" class="btn btn-warning btn-lg next" id="'.$next_id.'" '.$if_next_disable.'>Next</button>
+				   		<button type="button" name="next" class="btn btn-primary btn-lg next" id="'.$next_id.'" >'.$nextBtn.'</button>
+						<button type="button" name="finish" class="btn btn-danger btn-lg  finish_exam" >Finish</button>
+						<button type="button" name="save" class="btn btn-warning btn-lg  review_ans" id="'.$next_id.'" >Review & Next</button>
 				  	</div>
 				  	</div></div>';
 			}
@@ -620,10 +588,9 @@ if(isset($_POST['page']))
 		if($_POST['action'] == 'question_navigation')
 		{
 			$object->query = "
-				SELECT exam_subject_question_id FROM exam_subject_question_soes 
-				WHERE exam_id = '".$_POST["exam_id"]."' 
-				AND exam_subject_id = '".$_POST["exam_subject_id"]."' 
-				ORDER BY exam_subject_question_id ASC 
+				SELECT trainee_exam_info_id,qstn_sl_no,exam_question_id,status FROM tbl_exam_question_answer 
+				WHERE trainee_exam_info_id  = '".$_POST["trainee_exam_info_id"]."' 
+				ORDER BY qstn_sl_no ASC 
 				";
 			$result = $object->get_result();
 			$output = '
@@ -635,9 +602,23 @@ if(isset($_POST['page']))
 			$count = 1;
 			foreach($result as $row)	
 			{
+				//$class_name = '';
+				//$class_name = ($row["status"]==1)?'btn-success':($row["status"]==2)?'btn-warning':'btn-danger';
+				switch ($row["status"]) {
+					case '1':
+						$class_name = 'btn-success';
+						break;
+					case '2':
+						$class_name = 'btn-warning';
+						break;
+					default:
+					    $class_name = 'btn-danger';
+						break;
+				}
 				$output .= '
+				
 				<div class="col-sm-1 mb-2">
-					<button type="button" class="btn btn-primary question_navigation" data-question_id="'.$row["exam_subject_question_id"].'">'.$count.'</button>
+					<button type="button" class="btn '.$class_name.' question_navigation" data-question_id="'.$row["exam_question_id"].'">'.$count.'</button>
 				</div>
 				';
 				$count++;
@@ -651,44 +632,41 @@ if(isset($_POST['page']))
 
 		if($_POST['action'] == 'answer')
 		{
-			$exam_right_answer_mark = $object->Get_question_right_answer_mark($_POST["exam_subject_id"]);
-			$exam_wrong_answer_mark = $object->Get_question_wrong_answer_mark($_POST["exam_subject_id"]);
+			$exam_right_answer_mark = $object->Get_question_right_answer_mark($_POST["exam_id"]);
+			$exam_wrong_answer_mark = $object->Get_question_wrong_answer_mark($_POST["exam_id"]);
 			$orignal_answer = $object->Get_question_answer_option($_POST["question_id"]);
 			$marks = 0;
-			if($orignal_answer == $_POST['answer_option'])
-			{
-				$marks = '+'.$exam_right_answer_mark;
+			if($exam_wrong_answer_mark == 0){
+				if($orignal_answer == $_POST['answer_option'])
+				{
+					$marks = $exam_right_answer_mark;
+				}
+				else
+				{
+					$marks =  $exam_wrong_answer_mark;
+				}
+			}else{
+				if($orignal_answer == $_POST['answer_option'])
+				{
+					$marks = '+'.$exam_right_answer_mark;
+				}
+				else
+				{
+					$marks = '-' . $exam_wrong_answer_mark;
+				}
 			}
-			else
-			{
-				$marks = '-' . $exam_wrong_answer_mark;
-			}
-
-			$object->query = "
-			SELECT * FROM exam_subject_question_answer 
-			WHERE student_id='".$_SESSION["student_id"]."' 
-			AND exam_subject_question_id = '".$_POST["question_id"]."'
-			";
-
-			$object->execute();
-
-			if($object->row_count() > 0)
-			{
-				$object->query = "
-				UPDATE exam_subject_question_answer 
-			   	SET student_answer_option='".$_POST['answer_option']."', 
-			   	marks = '".$marks."' 
-			   	WHERE student_id='".$_SESSION["student_id"]."' AND exam_subject_question_id = '".$_POST["question_id"]."' 
+			
+//             echo $_POST['answer_option'];
+// 			echo '<br>';
+// 			echo $marks;
+// exit;
+            $object->query = "
+				UPDATE tbl_exam_question_answer 
+			   	SET trainee_ans_option='".$_POST['answer_option']."', 
+			   	marks = '".$marks."' ,status = '".$_POST['status']."'
+			   	WHERE trainee_exam_info_id='".$_POST['trainee_exam_info_id']."' AND exam_question_id = '".$_POST["question_id"]."' 
 				";
-			}
-			else
-			{
-				$object->query = "
-				INSERT INTO exam_subject_question_answer 
-			   	(student_id, exam_subject_question_id, student_answer_option, marks) 
-			   	VALUES ('".$_SESSION["student_id"]."', '".$_POST["question_id"]."', '".$_POST['answer_option']."', '".$marks."')
-				";
-			}
+			
 
 			$object->execute();
 
@@ -712,5 +690,3 @@ if(isset($_POST['page']))
 		}
 	}
 }
-
-?>

@@ -125,7 +125,7 @@
 
                                                 <thead class="" style="background: #315682;color:#fff;font-size: 11px;">
                                                     <th style="width:200px;"></th>
-                                                    <th style="">1</th>
+                                                    <th>1</th>
                                                     <th>2</th>
                                                     <th>3</th>
                                                     <th>4</th>
@@ -349,9 +349,9 @@ function save_feedback(prog_id, trng_type, username) {
             console.log(data);
             elm = data.split('#');
             if (elm[0] == 'success') {
-                sessionStorage.message = "Email Sent Successfully";
+                sessionStorage.message = "Feedback send Successfully";
                 sessionStorage.type = "success";
-                location.reload();
+               // location.reload();
             }
         }
     });

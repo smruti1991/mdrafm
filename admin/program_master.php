@@ -61,6 +61,7 @@
                                                         <label><strong>Programm Name</strong></label>
                                                         <input type="text" class="form-control" name="prg_name" id="prg_name"
                                                             placeholder="Enter Paper Code">
+                                                            <small></small>
                                                     </div>
                                                 </div>
 
@@ -76,17 +77,19 @@
                                                             <option value=0 selected>Select Tranning Type</option>
                                                             <option value=1 >Long Term Program (Newly Recruited)</option>
                                                             <option value=2 >Long Term Program (In Service)</option>
-                                                         
+                                                           
                                                         </select>
+                                                        <small></small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6" id="syllabus">
                                                     <div class="form-group">
                                                         <label><strong>Syllabus</strong></label>
                                                         <select class="custom-select mr-sm-2" name="syllabus_id" id="syllabus_id">
-                                                            <option selected>Select Syllabus Type</option>
+                                                            <option value=0 selected>Select Syllabus Type</option>
                                                                  
                                                         </select>
+                                                        <small></small>
                                                     </div>
                                                 </div>
                                                 
@@ -98,6 +101,7 @@
                                                         <label><strong>Provisional Start Date</strong></label>
                                                         <input type="date" class="form-control" name="provisonal_Sdate" id="provisonal_Sdate"
                                                             placeholder="Select Date">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -105,6 +109,7 @@
                                                         <label><strong>Provisional End Date</strong></label>
                                                         <input type="date" class="form-control" name="provisonal_Edate" id="provisonal_Edate"
                                                             placeholder="Select Date">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -117,6 +122,7 @@
                                                         <label><strong>Date of Commencement for Self Registration</strong></label>
                                                         <input type="date" class="form-control" name="dt_publication" id="dt_publication"
                                                             placeholder="Select Date">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -124,6 +130,7 @@
                                                         <label><strong>Closing Date of Self Registration  </strong></label>
                                                         <input type="date" class="form-control" name="dt_completion" id="dt_completion"
                                                             placeholder="Select Date">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -133,9 +140,20 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-
+                                    <?php
+                                   $rules = array(
+                                    'prg_name'=>'required,Programme Nname ',
+                                    'trng_type'=>'select,Tranning Type',
+                                    'syllabus_id'=>'select,Syllabus',
+                                    'provisonal_Sdate'=>'required,provisonal start date',
+                                     "provisonal_Edate"=>"required,provisonal etart date",
+                                    "dt_publication"=>"required",
+                                    "dt_completion"=>"required",
+                                  
+                                   );
+                                 ?>
                                         <button type="submit" class="btn btn-primary" name="submit" value="Save"id="save"
-                                            onclick="add('Subject','frm_program','tbl_program_master')">Save</button>
+                                            onclick='add("Subject","frm_program","tbl_program_master",<?php echo json_encode($rules)  ?>,displayMessage)'>Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -153,7 +171,7 @@
                             <div class="card-header">
                             <div class="row">
                                     <div class="col-md-4">  
-                                      <h4 class="card-title"> Program Master</h4>
+                                      <h4 class="card-title">Program Master</h4>
                                     </div>
                                     <div class="col-md-6"></div>
                                     <div class="col-md-2">
@@ -484,7 +502,7 @@ $('#trng_type').on('change', function() {
 
 })
 
-function add(str, frm, tbl) {
+function add(str, frm, tbl,rules,callback) {
 
 
     var update_id = $('#update_id').val();
@@ -496,16 +514,12 @@ function add(str, frm, tbl) {
         data: $('#' + frm).serialize() + '&' + $.param({
             'action': 'add',
             'table': tbl,
-            'update_id': update_id
+            'update_id': update_id,
+            rules:rules
         }),
         success: function(res) {
             console.log(res);
-            let elm = res.split('#');
-            if (elm[0] == "success") {
-                sessionStorage.message = str + ' ' + elm[1];
-                sessionStorage.type = "success";
-                location.reload();
-            }
+            callback(res);
         }
     })
 

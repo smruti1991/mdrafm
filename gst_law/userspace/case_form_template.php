@@ -139,7 +139,7 @@
         </div>
         <div class="form-group col-md-6">
             <label>Section Under GST Act :</label>
-            <select class="form-control " name="section_gst_act[]" id="section_gst_act" style="width: 100%;"
+            <select class="form-control form-select" name="section_gst_act[]" id="section_gst_act" style="width: 100%;"
                 multiple="multiple">
 
                 <option value="0">Select Section Under GST Act</option>

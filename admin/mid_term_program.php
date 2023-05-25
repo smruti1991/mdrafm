@@ -35,6 +35,34 @@
 
             <div class="content" style="margin-top: 50px;">
 
+                <div class="row" style="margin-top:10px">
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><strong> Tranning Type</strong></label>
+                                        <select class="custom-select mr-sm-2" name="trng_type" id="trng_type">
+                                            <option value="3" selected>Mid Term (Inhouse Program)</option>
+                                            <option value="7">Mid Term (sponsored Program)</option>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="button" class="btn btn-primary" name="Add" style="margin-top:25px"
+                                        onclick="addProgram()" value="Add Program ">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-4">
                         <div id="alert_msg" class="alert alert-success">added successfully</div>
@@ -53,13 +81,14 @@
                                     </div>
                                     <div class="modal-body">
 
-                                        <form method="post" id="mid_frm_program">
+                                        <form method="post" id="short_frm_program">
                                             <div class="row">
                                                 <div class="col-md-6" style="margin-bottom: 20px;">
                                                     <div class="form-group">
                                                         <label><strong>Program Name</strong></label>
                                                         <input type="text" class="form-control" name="prg_name"
                                                             id="prg_name" placeholder="Enter Program Name">
+                                                            <small></small>
                                                     </div>
                                                 </div>
 
@@ -68,31 +97,21 @@
                                             <div class="dept_div"
                                                 style="border-radius: 5px;padding: 10px;margin-bottom: 20px;box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
                                                 <div class="row">
-                                                    <!-- <label class="ml-3" style="background-color: #82b08d;
+                                                    <label class="ml-3" style="background-color: #82b08d;
                                                         border-radius: 5px;
                                                         color: #320d0d;
                                                         padding: 5px;">
-                                                        <strong> Organisation/Directorate</strong></label><br> -->
-                                                           
+                                                        <strong>Department/
+                                                            Organisation/Directorate</strong></label><br>
 
                                                 </div>
-                                                <!-- <div class="row">
-                                                  <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label><strong>Department Name</strong></label>
-                                                            <input type="text" class="form-control" name="dept_name"
-                                                                id="dept_name" placeholder="Enter Department Name">
-                                                        </div>
-                                                    </div>
-                                                </div> -->
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label><strong> Department/
-                                                            Organisation/Directorate</strong></label>
+                                                            <label><strong>Name</strong></label>
                                                             <input type="text" class="form-control" name="dept_name"
-                                                                id="dept_name" placeholder="Enter Department/
-                                                            Organisation/Directorate Name">
+                                                                id="dept_name" placeholder="Enter Department Name">
+                                                                <small></small>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -100,8 +119,11 @@
                                                             <label><strong> Email</strong></label>
                                                             <input type="text" class="form-control" name="dept_email"
                                                                 id="dept_email" placeholder="Enter Department Email">
+                                                                <small></small>
                                                         </div>
                                                     </div>
+
+
 
                                                 </div>
                                             </div>
@@ -118,6 +140,7 @@
                                                         <div class="col-md-10">
                                                             <input type="date" class="form-control" name="start_date"
                                                                 id="start_date" placeholder="Select Date">
+                                                                <small></small>
                                                         </div>
 
                                                     </div>
@@ -128,6 +151,7 @@
                                                         <div class="col-md-10">
                                                             <input type="date" class="form-control" name="end_date"
                                                                 id="end_date" placeholder="Select Date">
+                                                                <small></small>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -136,6 +160,7 @@
                                                         <label><strong> Hall Name</strong></label>
                                                         <input type="text" class="form-control" name="hall_name"
                                                             id="hall_name" placeholder="Enter Hall Name">
+                                                            <small></small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -164,6 +189,7 @@
                                                             <label><strong>Email Subject</strong></label>
                                                             <input type="text" class="form-control" name="email_sub"
                                                                 id="email_sub" placeholder="Enter Email Subject">
+                                                                <small></small>
                                                         </div>
                                                     </div>
 
@@ -177,6 +203,7 @@
                                                                 style="border: 1px solid rgb(79 67 67);border-radius:5px; max-height: 250px;height: 150px;">
 
                                                             </textarea>
+                                                            <small></small>
                                                             <!-- <input type="text" class="form-control" name="email_sub"
                                                                 id="email_sub" placeholder="Enter Email Subject"> -->
                                                         </div>
@@ -186,19 +213,104 @@
 
                                             <input type="hidden" id="update_id">
                                             <input type="hidden" name="status" value="draft">
-                                            <input type="hidden" name="trng_type" value="3">
+                                            <input type="hidden" name="trng_type" value="7">
 
                                         </form>
                                     </div>
                                     <div class="modal-footer">
+                                        <?php
+                                            $rules = array(
+                                                'prg_name'=>'required',
+                                                'dept_name'=>'required',
+                                                'dept_email'=>'required|email',
+                                                'start_date'=>'required',
+                                                'end_date'=>'required',
+                                                'hall_name'=>'required', 
+                                                'email_sub'=>'required', 
+                                                'hall_name'=>'required',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            'syllabus_id'=>'select',
+                                           
+                                        );
+                                        ?>
 
                                         <button type="submit" class="btn btn-primary" name="submit" value="Save"
                                             id="save"
-                                            onclick="add('Mid Term Program','mid_frm_program','tbl_mid_program_master')">Save</button>
+                                            onclick='add("Short Term Program","short_frm_program","tbl_mid_program_master",<?php echo json_encode($rules)  ?>,displayMessage)'>Save</button>
+                                           
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Short term modal -->
+                        <div class="modal fade" id="midTermModalInhouse" tabindex="-1"
+                            aria-labelledby="termModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content" style="width:200%; margin:20px -150px">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="termModalLabel">Mid Term Program </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form method="post" id="frm_program">
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><strong>Program Name</strong></label>
+                                                        <input type="text" class="form-control" name="prg_name"
+                                                            id="iprg_name" placeholder="Enter Program Name">
+                                                            <small></small>
+                                                    </div>
+                                                </div>
+                                              
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><strong>Tranning Start Date</strong></label>
+                                                        <input type="date" class="form-control" name="start_date"
+                                                            id="istart_date" placeholder="Select Date">
+                                                            <small></small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><strong>Tranning End Date</strong></label>
+                                                        <input type="date" class="form-control" name="end_date"
+                                                            id="iend_date" placeholder="Select Date">
+                                                            <small></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <input type="hidden" id="update_id">
+                                            <input type="hidden" name="status" value="draft">
+                                            <input type="hidden" name="trng_type" value="3">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <?php
+                                            $rules = array(
+                                                'prg_name'=>'required',
+                                                'start_date'=>'required',
+                                                'end_date'=>'required',
+                                        );
+                                        ?>
+
+                                        <button type="submit" class="btn btn-primary" name="submit" value="Save"
+                                            id="save"
+                                            onclick='add("Subject","frm_program","tbl_mid_program_master",<?php echo json_encode($rules)  ?>,displayMessage)'>Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Short term modal -->
 
                     </div>
                     <div class="col-md-2">
@@ -212,13 +324,13 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <h4 class="card-title">Medium Term Program </h4>
+                                        <h4 class="card-title">Short Term Program </h4>
                                     </div>
                                     <div class="col-md-6"></div>
-                                    <div class="col-md-2">
-                                        <input type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#midTermModalSponsored" value="Add New">
-                                    </div>
+                                    <!-- <div class="col-md-2">
+                                    <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#termModal"
+                                     value="Add New">
+                                    </div> -->
                                 </div>
 
 
@@ -232,7 +344,7 @@
                                             <th style="width:50px;">Sl No</th>
                                             <th style="text-align:center;">Programm Name</th>
                                             <th style="text-align:center;">Tranning Type</th>
-                                            <th style="text-align:center;"> Start Date</th>
+                                            <th style="text-align:center;">Start Date</th>
                                             <th style="text-align:center;">Status</th>
                                             <th style="text-align:center;">Details</th>
                                             <th style="text-align:center;">Action</th>
@@ -241,34 +353,33 @@
                                             <?php 
                                
                                $db = new Database();
-                               $count = 0;
-                               $db->select('tbl_mid_program_master',"*",null,"trng_type = 3",null,null);
+                               $prgCount = 0;
+                               $db->select('tbl_mid_program_master',"*",null,null,null,null);
                               // print_r( $db->getResult());
                                foreach($db->getResult() as $row){
-                                   //print_r($row);
+                                  
                                    $tbl = "";
-                                //    if($row['trng_type']==1){
-                                //        $tbl = 'tbl_sylabus_master';
-                                //    }
-                                   $count++
+                                
+                                   $prgCount++;
                                    ?>
                                             <tr>
-                                                <td><?php echo $count; ?></td>
-                                                <td style="text-align:center;"><?php echo $row['prg_name']; ?> </td>
-                                                <td style="text-align:center;">
+                                                <td><?php echo $prgCount; ?></td>
+                                                <td><?php echo $row['prg_name']; ?> </td>
+                                                <td>
                                                     <?php 
-                                                        $db->select_one('tbl_training_type',"type",$row['trng_type']);
-                                                        //print_r($db->getResult());
-                                                    foreach($db->getResult() as $row1){
-                                                        echo $row1['type'];
-                                                    }
-                                                        //echo $row['trng_type']; 
-                                                        ?>
+                                                        
+                                                        if($row['trng_type'] == 4){
+                                                          echo "Inhouse Program";
+                                                        }else{
+                                                          echo "Sponsored Program"; 
+                                                        }
+                                                    ?>
                                                 </td>
 
 
-                                                <td style="text-align:center;">
-                                                    <?php echo date("d-m-Y", strtotime($row['start_date'])) ?> </td>
+                                                <td>
+                                                    <?php echo date("d-m-Y", strtotime($row['start_date'])) ?>
+                                                </td>
 
                                                 <td style="text-align:center;">
                                                     <?php
@@ -279,7 +390,7 @@
                                                             break;
                                                         case 'pendingAtIncharge':
                                                         
-                                                            echo 'Pending at Tranning Incharge';
+                                                            echo 'Pending At Tranning Incharge';
                                                             break;
                                                         case 'approve':
                                                             echo 'Approved';
@@ -297,84 +408,29 @@
                                                     
                                                     ?> </td>
                                                 <td style="text-align:center;">
+                                                    <?php 
+                                                     if($row['trng_type'] == 3){
+                                                        ?>
+                                                           <input type="button" class="btn " style="background:#3292a2"
+                                                            name="send"
+                                                            onclick="datapost('program_detail.php',{id: <?php echo $row['id'] ?>,trng_type: <?php echo $row['trng_type'] ?> })"
+                                                            value="View Detail" />
+                                                        <?php
+                                                     }else{
+                                                         ?>
+                                                           <input type="button" class="btn " style="background:#3292a2"
+                                                            name="send"
+                                                            onclick="datapost('sponsored_program_detrail.php',{id: <?php echo $row['id'] ?>,trng_type: <?php echo $row['trng_type'] ?> })"
+                                                            value="View Detail" />
+                                                         <?php
+                                                     }
+                                                     
+                                                     ?>
+                                                    
 
-                                                    <input type="button" class="btn" style="background:#3292a2"
-                                                        data-toggle="modal"
-                                                        data-target="#viewModal_<?php echo $row['id'] ?>"
-                                                        value="View Detail" />
 
                                                     <!-- Modal -->
-                                                    <div class="modal fade" id="viewModal_<?php echo $row['id'] ?>"
-                                                        data-backdrop="static" data-keyboard="false" tabindex="-1"
-                                                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content"
-                                                                style="width:200%; margin:20px -150px">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="staticBackdropLabel">
-                                                                        Program Detail</h5>
-                                                                    <button type="button" class="close"
-                                                                        data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="prog_div">
-                                                                        <div class="row">
-                                                                            <div class="col-md-4">
-                                                                                Program Name :
-                                                                                <?php echo $row['prg_name'] ?>
-                                                                            </div>
-                                                                            <div class="col-md-4">
-                                                                                Department Name :
-                                                                                <?php echo $row['dept_name'] ?>
-                                                                            </div>
-                                                                            <!-- <div class="col-md-4">
-                                                                                Organisation Name :
-                                                                                <?php echo $row['org_name'] ?>
-                                                                            </div> -->
-                                                                            
-                                                                        </div><br>
-                                                                        <div class="row">
-                                                                           <div class="col-md-4">
-                                                                                Department Email :
-                                                                                <?php echo $row['dept_email'] ?>
-                                                                            </div>
-                                                                            <div class="col-md-4">
-                                                                                Tranning Start Date :
-                                                                                <?php echo date("d-m-Y", strtotime($row['start_date']))  ?>
-                                                                            </div>
-                                                                            <div class="col-md-4">
-                                                                                Tranning End Date :
-                                                                                <?php echo date("d-m-Y", strtotime($row['end_date']))  ?>
-                                                                            </div>
-                                                                            
-                                                                        </div><br>
-                                                                        <div class="row">
-                                                                           <div class="col-md-4">
-                                                                                Tranning Hall :
-                                                                                <?php echo $row['hall_name'] ?>
-                                                                            </div>
-                                                                            <div class="col-md-4">
-                                                                                Email Subject :
-                                                                                <?php echo $row['email_sub'] ?>
-                                                                            </div>
-                                                                            <div class="col-md-4">
-                                                                                Email Content :
-                                                                                <?php echo $row['email_content'] ?>
-                                                                            </div>
-                                                                           
-                                                                        </div><br>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-dismiss="modal">Close</button>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                               
                                                 </td>
 
                                                 <td style="text-align:center;">
@@ -387,14 +443,14 @@
                                                         id="<?php echo $row['id']; ?>" onclick="edit(this.id)"><i
                                                             class="far fa-edit " style="font-size:1.5rem;"></i></a>
                                                     &nbsp;
-                                                    <a href="#" style="color:#e50c0c" id="<?php echo $row['id']; ?>"
+                                                    <!-- <a href="#" style="color:#e50c0c" id="<?php echo $row['id']; ?>"
                                                         onclick="cnfBox(<?php echo $row['id']; ?>)"><i
                                                             class="far fa-trash-alt "
-                                                            style="font-size:1.5rem;"></i></i></a><br>
+                                                            style="font-size:1.5rem;"></i></i></a><br> -->
 
                                                     <input type="button" class="btn " style="background:#3292a2"
                                                         name="send" id="<?php echo $row['id']; ?>"
-                                                        onclick="sendToApprove(this.id,'tbl_mid_program_master')"
+                                                        onclick="sendToApprove(this.id,'tbl_short_program_master')"
                                                         value="Send For Approval" />
 
                                                     <?php
@@ -402,16 +458,118 @@
                                                                 case 'pending':
                                                                     echo "Sent To Director For Approval";
                                                                     break;
+                                                                case 'pendingAtIncharge':
+                                                                    echo "Pending At Tranning Incharge";
+                                                                    break;
+                                                                case 'approve':
+                                                                   ?>
+                                                    <input type="text" class="btn" style="background:#3292a2"
+                                                        data-toggle="modal"
+                                                        data-target="#viewTraineeModal_<?php echo $row['id'] ?>"
+                                                        value="View Trainee Detail" />
+
+
+                                                    <!-- Modal -->
+                                                    <div class="modal fade"
+                                                        id="viewTraineeModal_<?php echo $row['id'] ?>"
+                                                        data-backdrop="static" data-keyboard="false" tabindex="-1"
+                                                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content"
+                                                                style="width:200%; margin:20px -150px">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="staticBackdropLabel">
+                                                                        Trainee Detail</h5>
+                                                                    <button type="button" class="close"
+                                                                        data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="prog_div">
+                                                                        <div id="term2"
+                                                                            class=" table table-responsive table-striped table-hover"
+                                                                            style="width:100%;margin:0px auto">
+                                                                            <table class=" term table" id="tableid">
+                                                                                <thead class=""
+                                                                                    style="background: #315682;color:#fff;font-size: 11px;">
+
+
+                                                                                    <th>Sl No</th>
+
+                                                                                    <th>Name</th>
+                                                                                    <th>HRMS Id</th>
+                                                                                    <th>Designation</th>
+                                                                                    <th>Place of Posting</th>
+                                                                                    <th>Email</th>
+                                                                                    <th style="text-align:center;">Phone
+                                                                                    </th>
+                                                                                    
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <?php
+
+
+        $count = 0;
+
+
+        $db->select('tbl_dept_trainee_registration', "*", null, "program_id =" . $row['id'], null, null);
+                  
+        // print_r( $db->getResult());
+        foreach ($db->getResult() as $row) {
+           // print_r($row);
+            $count++
+        ?>
+                                                                                    <tr>
+
+                                                                                        <td><?php echo $count; ?></td>
+
+                                                                                        <td> <?php echo $row['name']  ?>
+                                                                                        </td>
+                                                                                        <td> <?php echo $row['hrms_id']  ?>
+                                                                                        </td>
+                                                                                        <td> <?php echo $row['designation']  ?>
+                                                                                        </td>
+                                                                                        <td> <?php echo $row['office_name']  ?>
+                                                                                        </td>
+                                                                                        <td> <?php echo $row['email']  ?>
+                                                                                        </td>
+                                                                                        <td style="text-align:center;">
+                                                                                            <?php echo $row['phone']; ?>
+                                                                                        </td>
+
+                                                                                    </tr>
+                                                                                    <?php
+        }
+
+
+        ?>
+
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-dismiss="modal">Close</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                                    break;
                                                                 case 'reject_by_incharge':
                                                                     ?>
                                                     <a href="#" style="color:#4164b3" class="edit"
                                                         id="<?php echo $row['id']; ?>" onclick="edit(this.id)"><i
                                                             class="far fa-edit " style="font-size:1.5rem;"></i></a>
 
-                                                    <input type="button" class="btn btn-info btn-sm "
+                                                    <input type="text" class="btn btn-info btn-sm "
                                                         style="background:#843c26;" name="send"
                                                         id="<?php echo $row['id']; ?>"
-                                                        onclick="sendToApprove(this.id,'tbl_mid_program_master')"
+                                                        onclick="sendToApprove(this.id,'tbl_short_program_master')"
                                                         value="Send For Approval" />
                                                     <?php
                                                                     break;
@@ -506,11 +664,69 @@
 </html>
 
 <script type="text/javascript">
-function add(str, frm, tbl) {
+
+    const prg_nameEl = document.querySelector('#prg_name');
+    const dept_nameE1 = document.querySelector('#dept_name');
+    const dept_emailE1 = document.querySelector('#dept_email');
+    const start_dateE1 = document.querySelector('#start_date');
+    const end_dateEl = document.querySelector('#end_date');
+    const hall_nameE1 = document.querySelector('#hall_name');
+    const email_subE1 = document.querySelector('#email_sub');
+    const email_contentE1 = document.querySelector('#email_content');
+
+    const iprg_nameEl = document.querySelector('#iprg_name');
+    const istart_dateE1 = document.querySelector('#istart_date');
+    const iend_dateEl = document.querySelector('#iend_date');
+//console.log(prg_nameEl)
+
+function addProgram() {
+    let trng_type = $('#trng_type').val();
+    // alert(trng_type); 
+    if (trng_type == 7) {
+        $('#midTermModalSponsored').modal('show');
+    } else {
+        $('#midTermModalInhouse').modal('show');
+    }
 
 
+}
+
+
+
+function add(str, frm, tbl, rules,callback) {
+
+console.log(frm);
+ let isFormValid='';
+    // validate forms
+    if(frm === 'short_frm_program'){
+        let isPrgNameValid = checkTextField(prg_nameEl),
+        isDeptNameValid =  checkTextField(dept_nameE1),
+        isDeptEmailValid = checkTextField(dept_emailE1),
+        isStartDateValid = checkTextField(start_dateE1),
+        isEndDateValid = checkTextField(end_dateEl),
+        isHallNameValid =  checkTextField(hall_nameE1),
+        isEmailSubValid = checkTextField(email_subE1),
+        isEmailContentValid = checkTextField(email_contentE1);
+
+
+     isFormValid = isPrgNameValid &&
+                        isDeptNameValid &&
+                        isDeptEmailValid &&
+                        isStartDateValid&&
+                        isEndDateValid &&
+                        isHallNameValid &&
+                        isEmailSubValid&&
+                        isEmailContentValid
+    }else{
+        let isPrgNameValid = checkTextField(iprg_nameEl),
+            isStartDateValid = checkTextField(istart_dateE1),
+            isEndDateValid = checkTextField(iend_dateEl)
+        
+         isFormValid = isPrgNameValid && isStartDateValid && isEndDateValid;
+    }
+    
     var update_id = $('#update_id').val();
-
+    if(isFormValid){
     $.ajax({
         type: "POST",
         url: "ajax_master.php",
@@ -518,18 +734,15 @@ function add(str, frm, tbl) {
         data: $('#' + frm).serialize() + '&' + $.param({
             'action': 'add',
             'table': tbl,
-            'update_id': update_id
+            'update_id': update_id,
+             rules:rules
         }),
         success: function(res) {
-console.log(res);
-            let elm = res.split('#');
-            if (elm[0] == "success") {
-                sessionStorage.message = str + ' ' + elm[1];
-                sessionStorage.type = "success";
-                location.reload();
-            }
+            console.log(res);
+            callback(res);
         }
     })
+}
 
 }
 
@@ -541,7 +754,7 @@ function edit(id) {
         dataType: "json",
         data: {
             action: "edit",
-            table: "tbl_mid_program_master",
+            table: "tbl_short_program_master",
             edit_id: id
 
         },
@@ -551,19 +764,28 @@ function edit(id) {
 
                     $('#update_id').val(data.id);
 
-                    $('#dept_name').val(data.dept_name);
-                    // $('#org_name').val(data.org_name);
-                    $('#dept_email').val(data.dept_email);
-                    $('#hall_name').val(data.hall_name);
-                    $('#email_sub').val(data.email_sub);
-                    $('#email_content').val(data.email_content);
+                    if (data.trng_type == 5) {
+                        $('#midTermModalSponsored').modal('show');
+
+                        $('#dept_name').val(data.dept_name);
+                        $('#dept_email').val(data.dept_email);
+                        $('#hall_name').val(data.hall_name);
+                        $('#email_sub').val(data.email_sub);
+                        $('#email_content').val(data.email_content);
+                    } else {
+                        $('#midTermModalInhouse').modal('show');
+                    }
+
                     $('#prg_name').val(data.prg_name);
                     $('#start_date').val(data.start_date);
                     $('#end_date').val(data.end_date);
+                    // $('#dt_publication').val(data.dt_publication);
+                    // $('#dt_completion').val(data.dt_completion);
+
 
                     $('#save').html('Update');
                     $('#save').attr('id', 'update');
-                    $('#midTermModalSponsored').modal('show');
+                    $('#termModal').modal('show');
                 }
 
             )
@@ -576,7 +798,7 @@ function cnfBox(id) {
     //alert(id);
     $('#m_footer').empty();
     var html =
-        `<input type="button" class="btn btn-danger btn-dlt" value="Delete" onclick="delete_record(${id},'tbl_program_master')" />`;
+        `<input type="button" class="btn btn-danger btn-dlt" value="Delete" onclick="delete_record(${id},'tbl_short_program_master')" />`;
     $('#m_footer').append(html);
     $('#cnfModal').modal('show');
 }
@@ -603,7 +825,6 @@ function delete_record(id, tbl) {
     })
 }
 
-
 function sendToApprove(id, tbl) {
     if (confirm('Are you sure you want to Send this Program to Tranning Incharge For Approval')) {
         $.ajax({
@@ -628,7 +849,6 @@ function sendToApprove(id, tbl) {
         return false;
     }
 }
-
 
 function datapost(path, params, method) {
     //alert(path);

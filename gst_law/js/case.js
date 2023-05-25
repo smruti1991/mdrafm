@@ -3,7 +3,7 @@ $('#broadArea').select2({
     allowClear: true,
     
 });
-$('#section_gst_act2').select2({
+$('#section_gst_act').select2({
     placeholder: "Select a Section under GST Act",
     allowClear: true,
     

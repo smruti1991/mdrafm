@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<title>Online Student Exam Management System in PHP</title>
+		<title> MDRAFM Online Student Exam Management</title>
 
 	    <!-- Custom styles for this page -->
 	    <link href="vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -29,41 +29,32 @@
 		if($object->is_student_login())
 		{
 		?>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-		  	<a class="navbar-brand" href="#">Student Exam System</a>
-		  	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-		    	<span class="navbar-toggler-icon"></span>
-		  	</button>
-		  	<div class="collapse navbar-collapse" id="navbarText">
-		    	<ul class="navbar-nav mr-auto">
-		      		<li class="nav-item active">
-		        		<a class="nav-link" href="student_dashboard.php">Home</a>
-		      		</li>
-		      		<li class="nav-item">
-		        		<a class="nav-link" href="exam.php">Exam</a>
-		      		</li>
-		      		<li class="nav-item">
-		        		<a class="nav-link" href="logout.php">Logout</a>
-		      		</li>
-		    	</ul>
-		  	</div>
-		</nav>
+		
 		<?php
 		}
 		else
 		{
 		?>
 		<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-		    <h5 class="my-0 mr-md-auto font-weight-normal">Webslesson</h5>
+		 <div class="header-logo logo">
+              
+			  <img src="../images/logo-Copy.png" style="height:120px;margin-left: 10px;"> 
+		  </div>
+		  <div>
+		  <h1
+                                style="font-size: 1.5rem;font-family: serif;user-select: auto;font-weight:bold;color:#2551b5">
+                                Madhusudan Das
+                                Regional Academy of Financial Management (MDRAFM), Bhubaneswar</h1>
+		  </div>
 		    
 	    </div>
 
-	    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+	    <!-- <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
 	      	<h1 class="display-4">Online Student Exam Management System</h1>
-	    </div>
-	    <br />
-	    <br />
+	    </div> -->
+	   
+	    
 	    <?php
 		}
 	    ?>
-	    <div class="container-fluid">
+	   

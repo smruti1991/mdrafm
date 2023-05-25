@@ -24,8 +24,8 @@ if (isset($frm_data['faculty'])) {
 //save and update
 if (isset($_POST['action']) && $_POST['action'] == 'add') {
   
-  print_r($_POST);
-  exit;
+  // print_r($_POST);
+  // exit;
  // echo 123;
 //  echo print_r($_SESSION);
 //  echo '<br>';

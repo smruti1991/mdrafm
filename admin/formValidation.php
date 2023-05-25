@@ -13,8 +13,17 @@ class Validation
         foreach ($request_data as $key => $value) {
           // check for which field rules is define.
           if(array_key_exists($key,$rules)){
+            $validationMsg = explode(",",$rules[$key]);
+            if(isset($validationMsg[1])){
+              $errorMsg = $validationMsg[1];
+            }else{
+              $errorMsg = '';
+            }
+            // print_r($validationMsg);
+            // echo $errorMsg;
+            // exit;
             // if one filed have multiple validation then explode validation methods.
-            $validationRule = explode("|",$rules[$key]);
+            $validationRule = explode("|",$validationMsg[0]);
             // call that all validation method.
             foreach ($validationRule as $methodName) {
     
@@ -30,10 +39,10 @@ class Validation
                 // optional fields
                 $program_id =  (isset($dbValidation[2]) && !empty($dbValidation[2])?$dbValidation[2]:"");
                 $trng_type = (isset($dbValidation[3]) && !empty($dbValidation[3])?$dbValidation[3]:"");
-                $returnData = $this->$methodName($value,$fieldName,$table,$program_id,$trng_type);
+                $returnData = $this->$methodName($value,$fieldName,$table,$program_id,$trng_type,$errorMsg);
               }else {
                 // make a validation rule name as a function name.
-                $returnData = $this->$methodName($value,$key);
+                $returnData = $this->$methodName($value,$key,$errorMsg);
               }
               //if error so it return json error message.
               if($returnData!=$value){
@@ -50,11 +59,15 @@ class Validation
     /*
    Check a given email is valid or not.
   */
-  public function email($value,$fieldName){
+  public function email($value,$fieldName,$validationMsg ){
     if(filter_var($value,FILTER_VALIDATE_EMAIL) === false){
       // to send error message we are calling a Formatter class's method for display alert and error with their message.
-      $msg = "Invalide $fieldName address";
-      // $msg = "Invalide ".$this->customMsg[$fieldName]." address";
+      if($validationMsg == ''){
+        $msg = "Invalide $fieldName address";
+      }else{
+        $msg = "Invalide $validationMsg address";
+      }
+
       return $this->errorAlertMessage($msg,$fieldName,"input");
     }else {
       return $value;
@@ -63,12 +76,14 @@ class Validation
   /*
   Check given param is empty or not
   */
-  public function required($value,$fieldName){
+  public function required($value,$fieldName,$validationMsg){
     if(trim($value)==""){
-
-      // Uncomment line for a use of custom lable in error message.
-      // $msg = "Please enter ".$this->customMsg[$fieldName];
-      $msg = "Please enter ".str_replace("_"," ",$fieldName);
+      if($validationMsg == ''){
+        $msg = "Please enter ".str_replace("_"," ",$fieldName);
+      }else{
+        $msg =  $msg = "Please enter $validationMsg  ";
+      }
+      
 
       return $this->errorAlertMessage($msg,$fieldName,"input");
     }else {
@@ -78,11 +93,14 @@ class Validation
   /*
   Check given dropdown is select or not
   */
-  public function select($value,$fieldName){
+  public function select($value,$fieldName,$validationMsg){
     if(trim($value)==0){
-
-      $msg = "Please select ".str_replace("_"," ",$fieldName);
-
+      if($validationMsg == ''){
+        $msg = "Please select ".str_replace("_"," ",$fieldName);
+      }else{
+        $msg =  $msg = "Please select $validationMsg  ";
+      }
+     
       return $this->errorAlertMessage($msg,$fieldName,"select");
     }else {
       return $value;
@@ -91,11 +109,14 @@ class Validation
   /*
     preg match for a contact number
   */
-  public function contactNumber($value,$fieldName){
+  public function contactNumber($value,$fieldName,$validationMsg){
     if(!preg_match('/^[6-9][0-9]{9}$/', $value))
     {
-      $msg = "Invalid ".str_replace("_"," ",$fieldName);
-      // $msg = "Invalid ".$this->customMsg[$fieldName];
+      if($validationMsg == ''){
+        $msg = "Invalid ".str_replace("_"," ",$fieldName);
+      }else{
+        $msg = "Invalid $validationMsg ";
+      }
       return $this->errorAlertMessage($msg,$fieldName,"input");
     }else {
       return $value;
@@ -106,7 +127,7 @@ class Validation
  restrict a duplicate value into database.
   */
   // That check a data value must be unique at the time of insert data into database.
-  public function unique($value,$fieldName,$table,$program_id="",$trng_type=""){
+  public function unique($value,$fieldName,$table,$program_id="",$trng_type="",$validationMsg){
     
     $db = new Database;
 
@@ -118,7 +139,12 @@ class Validation
      $db->select_sql($query);
      $res = $db->getResult();
     if( count($res)>0){
-      $msg = str_replace("_"," ",$fieldName)." is already taken";
+      if($validationMsg == ''){
+        $msg = str_replace("_"," ",$fieldName)." is already taken";
+      }else{
+        $msg ="$validationMsg is already taken";
+      }
+     
      
       return $this->errorAlertMessage($msg,$fieldName,"input");
     }else {
@@ -129,10 +155,15 @@ class Validation
   /*
   Check a given input for the parameter is an integer or not.
   */
-  public function integer($value,$fieldName){
+  public function integer($value,$fieldName,$validationMsg){
     if(!preg_match('/^[0-9]*$/',$value))
     {
-      $msg = str_replace("_"," ",$fieldName)." must be number";
+      
+      if($validationMsg == ''){
+        $msg = str_replace("_"," ",$fieldName)." must be number";
+      }else{
+        $msg = "$validationMsg must be number";
+      }
       
       return $this->errorAlertMessage($msg,$fieldName,"input");
     }else {

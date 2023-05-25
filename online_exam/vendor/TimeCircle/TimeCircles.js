@@ -384,8 +384,8 @@
 
         this.data.attributes.item_size = Math.min(width / this.data.drawn_units.length, height);
         this.data.attributes.line_width = this.data.attributes.item_size * this.config.fg_width;
-        this.data.attributes.radius = ((this.data.attributes.item_size * 0.8) - this.data.attributes.line_width) / 2;
-        this.data.attributes.outer_radius = this.data.attributes.radius + 0.5 * Math.max(this.data.attributes.line_width, this.data.attributes.line_width * this.config.bg_width);
+        this.data.attributes.radius = ((this.data.attributes.item_size * 0.5) - this.data.attributes.line_width) / 2;
+        this.data.attributes.outer_radius = this.data.attributes.radius + 0.3 * Math.max(this.data.attributes.line_width, this.data.attributes.line_width * this.config.bg_width);
 
         // Prepare Time Elements
         var i = 0;
@@ -395,7 +395,7 @@
 
             var textElement = $("<div>");
             textElement.addClass('textDiv_' + key);
-            textElement.css("top", Math.round(0.35 * this.data.attributes.item_size));
+            textElement.css("top", Math.round(0.40 * this.data.attributes.item_size));
             textElement.css("left", Math.round(i++ * this.data.attributes.item_size));
             textElement.css("width", this.data.attributes.item_size);
             textElement.appendTo(this.container);
@@ -407,7 +407,7 @@
             headerElement.appendTo(textElement);
 
             var numberElement = $("<span>");
-            numberElement.css("font-size", Math.round(3 * this.config.text_size * this.data.attributes.item_size));
+            numberElement.css("font-size", Math.round(2 * this.config.text_size * this.data.attributes.item_size));
             numberElement.css("line-height", Math.round(this.config.text_size * this.data.attributes.item_size) + "px");
             numberElement.appendTo(textElement);
 

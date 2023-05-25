@@ -27,24 +27,19 @@
                     <thead class="" style="background: #315682;color:#fff;">
   
                         <th>Sl No</th>
-                        <th>Fist Name </th>
-                        <th>Last Name </th>
-                        <th>DOB</th>
-                        <th>Category </th>
-                        <th>Sex</th>
-                        <th>Email</th>
+                        <th>Name </th>
                         <th>Phone</th>
-                        <th>Roll No</th>
-                        <th>District</th>
+                        <th>Email</th>
+                        <th>Designation</th>
+                        <th>Office </th>
                        
-  
                     </thead>
                     <tbody>
                         <?php 
                                               
                                               
                         $count = 0;
-  
+  //print_r($data);
                           foreach($data as $row){
                              
                               $count++;
@@ -52,40 +47,21 @@
                               //print_r($row);
                             if( trim($row[0]) !='' && trim($row[1]) != '' && trim($row[2]) != '' && trim($row[3]) != ''){
                               //$name = explode(' ', trim($row[0]));
-                              $name = split_name(trim($row[0]));
-                             // print_r($name);
-                             switch ($row[2]) {
-                              case 'UR':
-                                $cat = 1;
-                                break;
-                              case 'SEBC':
-                                $cat = 3;
-                                break;
-                              case 'ST':
-                                $cat = 4;
-                                break;
-                              case 'SC':
-                                $cat = 5;
-                                break;
-                              
-                             
-                             }
+                           
+                            
                               //exit;
                             
                         ?>
                         <tr>
                             <td><?php echo $count; ?></td>
-                            <td><?php echo $name[0]; ?></td>
-                            <td><?php echo $name[1]; ?></td>
-                            <td><?php echo  Date("d-m-Y",strtotime($row[1])); ?>
-                            </td>
-                            <td><?php echo $cat; ?></td>
-                            <td><?php echo ($row[3] == 'M')?1:0; ?></td>
+                           
+                            <td><?php echo $row[1]; ?></td>
+                            <td><?php echo trim($row[2]); ?> </td>
+                            
                             <td><?php echo trim($row[4]); ?> </td>
                             <td><?php echo trim($row[5]); ?> </td>
                             <td><?php echo trim($row[6]); ?> </td>
-                            <td><?php echo trim($row[7]); ?> </td>
-  
+                           
                         </tr>
                         <?php
                             }
@@ -106,20 +82,25 @@
   if(isset($_POST['action']) && $_POST['action'] == 'import_excel_db'){
     //  print_r($_POST);
     //    exit;
-   $tableData = stripcslashes($_POST['tableData']);
+   //$tableData = stripcslashes($_POST['tableData']);
   
    // Decode the JSON array
-     $tableData = json_decode($tableData,TRUE);
+     $tableData = json_decode($_POST['tableData'],TRUE);
+     //print_r($tableData);
      foreach($tableData as $data){
+      //print_r($data);
         //$data['batch_id'] = 3;
-        $dob  = Date("Y-m-d",strtotime($data['dob']));
+       
     //    print_r($data);
     //    exit;
       
     
-   echo $insert_sql = "INSERT INTO `tbl_new_recruite` (`id`, `batch_id`, `program_id`, `trng_type`, `f_name`, `l_name`, `dob`, `category`, `hrms_id`, `place_of_posting`, `sex`, `email`, `phone`, `roll_no`, `district`, `fin_status`, `mdrafm_status`, `email_status`, `add_on`) 
-                   VALUES (NULL, '11', '', '1', '".$data['f_name']."', '".$data['l_name']."', '".$dob."', '".$data['category']."', '', '', '".$data['sex']."', '".$data['email']."','".$data['phone']."', '".$data['roll_no']."', '".$data['district']."', '0', '0', '0', '2023-01-05 18:43:33.000000')";
+  //  echo $insert_sql = "INSERT INTO `tbl_new_recruite` (`id`, `batch_id`, `program_id`, `trng_type`, `f_name`, `l_name`, `dob`, `category`, `hrms_id`, `place_of_posting`, `sex`, `email`, `phone`, `roll_no`, `district`, `fin_status`, `mdrafm_status`, `email_status`, `add_on`) 
+  //                  VALUES (NULL, '11', '', '1', '".$data['f_name']."', '".$data['l_name']."', '".$dob."', '".$data['category']."', '', '', '".$data['sex']."', '".$data['email']."','".$data['phone']."', '".$data['roll_no']."', '".$data['district']."', '0', '0', '0', '2023-01-05 18:43:33.000000')";
 
+   $insert_sql =   "INSERT INTO `tbl_trainee_registration` (`id`, `program_id`, `trng_type`, `name`, `hrms_id`, `designation`, `office_name`, `email`, `phone`, `status`, `mail_status`) 
+    VALUES (NULL, '3', '3', '".$data['name']."', '0', '".$data['designation']."', '".$data['office']."', '".$data['email']."','".$data['mobile']."', '1', '1')";
+//exit;
   $db->insert_sql($insert_sql);
   $res = $db->getResult();
   print_r($res);

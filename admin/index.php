@@ -100,16 +100,16 @@
                                     <td>Syllabus of OFS Promotion</td>
                                     <td> <a href="assets/Syllabus_OFS_on_promotion.pdf" target="_blank" >View </a> </td>
                                 </tr> -->
-                        <tr>
+                        <!-- <tr>
                             <td>Nomination Letter </td>
                             <td> <a href="assets/docs/Nomination_Letter.pdf" target="_blank">View </a> </td>
-                        </tr>
+                        </tr> -->
                         <!-- <tr>
                             <td>Welcome Letter</td>
                             <td> <a href="assets/docs/welcome_letter.pdf" target="_blank">View </a> </td>
                         </tr> -->
                         <tr>
-                            <td>Time Table ( 19.12.2022 to 23.12.2022 )</td>
+                            <td>Time Table ( 08.05.2023 to 13.05.2023 )</td>
                             <td> <a href="assets/docs/Programme_Schedule.pdf" target="_blank">View </a> </td>
                         </tr>
                         

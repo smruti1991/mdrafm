@@ -2,27 +2,27 @@
 
 //exam.php
 
-include('soes.php');
+include('database.php');
 
-$object = new soes();
+$object = new database();
 
 if(!$object->is_login())
 {
     header("location:".$object->base_url."admin");
 }
 
-if(!$object->is_master_user())
-{
-    header("location:".$object->base_url."admin/result.php");
-}
+// if(!$object->is_master_user())
+// {
+//     header("location:".$object->base_url."admin/result.php");
+// }
 
-$object->query = "
-SELECT * FROM exam_soes 
-WHERE exam_status = 'Pending' OR exam_status = 'Created' 
-ORDER BY exam_title ASC
-";
+// $object->query = "
+// SELECT * FROM exam_soes 
+// WHERE exam_status = 'Pending' OR exam_status = 'Created' 
+// ORDER BY exam_title ASC
+// ";
 
-$result = $object->get_result();
+// $result = $object->get_result();
 
 include('header.php');
                 
@@ -33,6 +33,54 @@ include('header.php');
 
                     <!-- DataTales Example -->
                     <span id="message"></span>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                        	<div class="row">
+                            	
+                            	
+                                    <div class="col-md-4">
+                                         <label>Syllabus</label>
+                                            <select name="syllabus_id" id="syllabus_id" class="form-control" required>
+                                                <option value="0">Select Syllabus</option>
+                                                <?php
+                                                $object->query = "
+                                                SELECT * FROM tbl_sylabus_master 
+                                                ";
+                                                
+                                                $res = $object->get_result();
+
+                                                foreach ($res as $row1) {
+                                                    echo '
+                                                    <option value="' . $row1["id"] . '">' . $row1["descr"] . '</option>
+                                                    ';
+                                                }
+                                                ?>
+                                            </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Term</label>
+                                        <select name="term_id" id="term_id" class="form-control" required>
+                                            <option value="0">Select Term</option>
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Paper</label>
+                                        <select name="paper_id" id="paper_id" class="form-control" required>
+                                            <option value="0">Select Paper</option>
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                       <input type="button" name="view" id="view_button" onclick="showExamQstions()" class="btn btn-success mt-5" value="View" />
+                                    </div>
+                               
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                         	<div class="row">
@@ -49,8 +97,9 @@ include('header.php');
                                 <table class="table table-bordered" id="exam_subject_question_table" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Exam Name</th>
-                                            <th>Subject</th>
+                                            <th>Syllabus Name</th>
+                                            <th>Term</th>
+                                            <th>Paper</th>
                                             <th>Question</th>
                                             <th>Option 1</th>
                                             <th>Option 2</th>
@@ -82,34 +131,13 @@ include('header.php');
         		</div>
         		<div class="modal-body">
         			<span id="form_message"></span>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Exam Name</label>
-                        <div class="col-sm-9">
-                            <select name="exam_id" id="exam_id" class="form-control" required>
-                                <option value="">Select Exam</option>
-                                <?php
-                                foreach($result as $row)
-                                {
-                                    echo '
-                                    <option value="'.$row["exam_id"].'">'.$row["exam_title"].'</option>
-                                    ';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Subject</label>
-                        <div class="col-sm-9">
-                            <select name="exam_subject_id" id="exam_subject_id" class="form-control" required>
-                                <option value="">Select Subject</option>
-                            </select>
-                        </div>
-                    </div>
+
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Question Title</label>
                         <div class="col-sm-9">
-                            <input type="text" name="exam_subject_question_title" id="exam_subject_question_title" class="form-control datepicker" required data-parsley-trigger="keyup" />
+                            <!-- <input type="text" name="exam_subject_question_title" id="exam_subject_question_title" class="form-control" required data-parsley-trigger="keyup" /> -->
+                            <textarea class="form-control" id="exam_subject_question_title" name="exam_subject_question_title"
+                              rows="5"></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -151,6 +179,10 @@ include('header.php');
         		</div>
         		<div class="modal-footer">
           			<input type="hidden" name="hidden_id" id="hidden_id" />
+                      <input type="hidden" name="syllabus_id" id="qsyllabus_id" />
+                      <input type="hidden" name="term_id" id="qterm_id" />
+                      <input type="hidden" name="paper_id" id="qpaper_id" />
+
           			<input type="hidden" name="action" id="action" value="Add" />
           			<input type="submit" name="submit" id="submit_button" class="btn btn-success" value="Add" />
           			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -159,26 +191,38 @@ include('header.php');
     	</form>
   	</div>
 </div>
+<script src="../../ckeditor/ckeditor.js"> </script>
 
 <script>
-$(document).ready(function(){
+    function showExamQstions(){
 
-	var dataTable = $('#exam_subject_question_table').DataTable({
-		"processing" : true,
-		"serverSide" : true,
-		"order" : [],
-		"ajax" : {
-			url:"exam_subject_question_action.php",
-			type:"POST",
-			data:{action:'fetch'}
-		},
-		"columnDefs":[
-			{
-				"targets":[3, 4, 5, 6, 7, 8],
-				"orderable":false,
-			},
-		],
-	});
+        let syllabus_id = $('#syllabus_id').val();
+        let term_id = $('#term_id').val();
+        let paper_id = $('#paper_id').val();
+
+        var dataTable = $('#exam_subject_question_table').DataTable({
+            "processing" : true,
+            "serverSide" : true,
+            "bDestroy": true,
+            "serverMethod":'post',
+            "order" : [],
+            "ajax" : {
+                url:"exam_subject_question_action.php",
+                type:"POST",
+                data:{action:'fetch',syllabus_id:syllabus_id,term_id:term_id,paper_id:paper_id}
+            },
+            "column":[
+                {
+                    "targets":[3, 4, 5, 6, 7, 8],
+                    "orderable":false,
+                },
+            ],
+        });
+
+    }
+    
+$(document).ready(function(){
+    CKEDITOR.replace('exam_subject_question_title');
 
     $('#exam_id').change(function(){
         var exam_id = $('#exam_id').val();
@@ -224,6 +268,21 @@ $(document).ready(function(){
 		event.preventDefault();
 		if($('#exam_subject_question_form').parsley().isValid())
 		{		
+            let syllabus = $('#syllabus_id').val();
+            let term = $('#term_id').val();
+            let paper = $('#paper_id').val();
+
+                $('#qsyllabus_id').val(syllabus);
+                $('#qterm_id').val(term);
+                $('#qpaper_id').val(paper);
+
+           const question_title =  CKEDITOR.instances['exam_subject_question_title'].getData(); 
+           $('#exam_subject_question_title').val(question_title);
+
+            // var form_data = new FormData('#exam_subject_question_form');
+            // form_data.append("exam_subject_question_title",question_title);
+             console.log(question_title);
+           
 			$.ajax({
 				url:"exam_subject_question_action.php",
 				method:"POST",
@@ -236,6 +295,7 @@ $(document).ready(function(){
 				},
 				success:function(data)
 				{
+                    console.log(data);
 					$('#submit_button').attr('disabled', false);
 					if(data.error != '')
 					{
@@ -248,7 +308,8 @@ $(document).ready(function(){
 
 						$('#message').html(data.success);
 
-						dataTable.ajax.reload();
+						//dataTable.ajax.reload();
+                        showExamQstions();
 
 						setTimeout(function(){
 
@@ -265,10 +326,10 @@ $(document).ready(function(){
 
 		var exam_subject_question_id = $(this).data('id');
 
-		$('#exam_subject_question_form').parsley().reset();
-
+		//$('#exam_subject_question_form').parsley().reset();
+        //CKEDITOR.replace('exam_subject_question_title');
 		$('#form_message').html('');
-
+       
 		$.ajax({
 
 	      	url:"exam_subject_question_action.php",
@@ -281,14 +342,16 @@ $(document).ready(function(){
 
 	      	success:function(data)
 	      	{
+                console.log(data);
                 $('#exam_id').val(data.exam_id);
 
                 $('#exam_subject_id').html('<option value="">Select Subject</option><option value="'+data.exam_subject_id+'">'+data.subject_name+'</option>');
 
                 $('#exam_subject_id').val(data.exam_subject_id);
 
-	        	$('#exam_subject_question_title').val(data.exam_subject_question_title);
-
+	        	//$('#exam_subject_question_title').html(data.exam_subject_question_title);
+                CKEDITOR.instances['exam_subject_question_title'].setData(data.exam_subject_question_title); 
+               // CKEDITOR.replace('exam_subject_question_title');
                 $('#option_title_1').val(data.option_title_1);
 
                 $('#option_title_2').val(data.option_title_2);
@@ -353,6 +416,42 @@ $(document).ready(function(){
     	}
 
   	});
+
+    
+
+      $('#syllabus_id').change(function() {
+            var syllabus_id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "exam_subject_question_action.php",
+
+                data: {
+                    syllabus_id: syllabus_id,
+                    action: "select_qustion_term"
+                },
+                success: function(res) {
+                    console.log(res);
+                    $('#term_id').html(res);
+                }
+            })
+        })
+
+        $('#term_id').change(function() {
+            var term_id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "exam_action.php",
+
+                data: {
+                    term_id: term_id,
+                    action: "select_paper"
+                },
+                success: function(res) {
+                    console.log(res);
+                    $('#paper_id').html(res);
+                }
+            })
+        })
 
 });
 </script>

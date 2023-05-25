@@ -36,7 +36,7 @@
                   <div class="input-group-text">
                     <i class="now-ui-icons ui-1_zoom-bold"></i>
                   </div>
-                </div>
+                </div> 
               </div>
             </form> -->
 

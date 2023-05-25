@@ -21,7 +21,7 @@
       
        $program_table = 'tbl_program_master';
     }
-    elseif($trng_type == 3 || $trng_type == 8){
+    elseif($trng_type == 3 || $trng_type == 7){
              
        $program_table = 'tbl_mid_program_master';
     }
@@ -234,10 +234,11 @@
                                                 WHERE p.id = '" . $_POST['id'] . "' ";
                                             break;
                                         case '3':
-                                            $sql = "SELECT p.id,p.prg_name,t.type,p.course_director,p.asst_course_director,p.provisonal_Sdate,p.provisonal_Edate,p.status
-                                                FROM `tbl_program_master` p JOIN `tbl_training_type` t 
-                                                ON p.trng_type=t.id
-                                                WHERE p.id = '" . $_POST['id'] . "' ";
+                                            $sql = "SELECT p.id,p.prg_name,t.type,d.course_director,d.asst_course_director,p.start_date,p.end_date,p.status
+                                            FROM $program_table p 
+                                            JOIN `tbl_training_type` t ON p.trng_type=t.id
+                                            JOIN `tbl_program_directors` d ON p.course_director_id = d.id
+                                            WHERE p.id = '" . $_POST['id'] . "' ";
                                             break;
                                         case '4':
                                             $sql = "SELECT p.id,p.prg_name,t.type,d.course_director,d.asst_course_director,p.start_date,p.end_date,p.status
@@ -440,8 +441,8 @@
                                             'designation'=>'required',
                                             'title'=>'required',
                                             "office_name"=>"required",
-                                            "email"=>"email|unique:tbl_mid_trainee_registration:".$_POST['id'].":".$_POST['trng_type'],
-                                            "phone"=>"contactNumber|unique:tbl_mid_trainee_registration:".$_POST['id'].":".$_POST['trng_type'],
+                                            "email"=>"email|unique:tbl_trainee_registration:".$_POST['id'].":".$_POST['trng_type'],
+                                            "phone"=>"contactNumber|unique:tbl_trainee_registration:".$_POST['id'].":".$_POST['trng_type'],
                                           
                                            );
                                           
@@ -449,7 +450,7 @@
                                         <div class="d-flex justify-content-center ">
                                             <button type="submit" class="btn btn-primary" name="submit" value="Save"
                                                 id="save"
-                                                onclick='add("new tranee","frm_newTranee","tbl_mid_trainee_registration",<?php echo json_encode($rules)  ?>,displayMessage)''>Save</button>
+                                                onclick='add("new tranee","frm_newTranee","tbl_trainee_registration",<?php echo json_encode($rules)  ?>,displayMessage)''>Save</button>
                                         </div>
 
                                     </div>
@@ -466,7 +467,8 @@
                                                 include "long_term_trainee_template.php";
                                             } elseif ($_POST['trng_type'] == 3 || $_POST['trng_type'] == 4) {
 
-                                                include "mid_term_trainee_template.php";
+                                                // include "mid_term_trainee_template.php";
+                                                include "view_trainee_template.php";
                                             }
                                             ?>
 
@@ -508,10 +510,10 @@
                                                     $count = 0;
 
                                                     $db->select(
-                                                        'tbl_mid_trainee_registration',
+                                                        'tbl_trainee_registration',
                                                         "*",
                                                         null,
-                                                        "program_id =" . $_POST['id'],
+                                                        "trng_type = '". $_POST['trng_type']."' AND program_id =" . $_POST['id'],
                                                         null,
                                                         null
                                                     );

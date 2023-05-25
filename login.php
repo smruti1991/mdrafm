@@ -56,17 +56,20 @@ if(isset($_POST['submit'])){
                     $name =  $row['name'];
                     $_SESSION['roll_id'] = $row['roll_id'];
                     $rolls = explode(",",$row['roll_id']) ;
-
+                   
                       if(in_array(9,$rolls)){
     
                         $db->select('tbl_faculty_master','name',null,'user_id='.$row['id'],null,null);
+                       
                         foreach($db->getResult() as $faculty){
+                           
                           $_SESSION['name'] =  $faculty['name'];
                         }
                       }
                       else{
                         $_SESSION['name'] =  $name;
                       }
+                     
                       header('location:admin/index.php');
                 }else{
                     //echo 'not valid';
