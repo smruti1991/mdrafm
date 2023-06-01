@@ -46,15 +46,27 @@
 
     if( $trng_type == 1 || $trng_type == 2){
 
-        $db->select('tbl_program_master',"f.name,f.desig,p.provisonal_Sdate,p.provisonal_Edate"," p JOIN `tbl_faculty_master` f ON p.course_director = f.id","p.id=".$_POST['prog_id'],null,null);
+        
+        $db->select($program_table,"p.provisonal_Sdate,p.provisonal_Edate,d.course_director,d.asst_course_director"," p JOIN `tbl_program_directors` d ON p.course_director_id = d.id","p.id=".$_POST['prog_id'],null,null);
         foreach($db->getResult() as $res){
-          $coDir = $res['name'];
-          $desig = $res['desig'];
-          $asst_coDir = '';
-          $asst_desig = '';
+         
+                   $db->select('tbl_faculty_master','name,desig',null,'id='.$res['course_director'],null,null);
+                   foreach($db->getResult() as $res_coDir){
+                      $coDir =  $res_coDir['name']; 
+                      $desig =  $res_coDir['desig']; 
+                   }
+  
+                   $db->select('tbl_faculty_master','name,desig',null,'id='.$res['asst_course_director'],null,null);
+                   foreach($db->getResult() as $res_asst_coDir){
+                      $asst_coDir =  $res_asst_coDir['name']; 
+                      $asst_desig =  $res_asst_coDir['desig']; 
+                   }
+  
+         
           $startDtae = $res['provisonal_Sdate'];
           $endDate = $res['provisonal_Edate'];
         }
+
     }else{
        
     //     $db->select($program_table,"f.name,f.desig,p.start_date,p.end_date"," p JOIN `tbl_faculty_master` f ON p.course_director = f.id","p.id=".$_POST['prog_id'],null,null);

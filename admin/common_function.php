@@ -99,7 +99,7 @@
                                                       $page = 'view_short_time_table.php';
                                                    }
                                                    else{
-                                                      $page = 'view_time_table.php';
+                                                      $page = 'view_time_table.php'; 
                                                    }
                                                 ?>
 
