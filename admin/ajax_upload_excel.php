@@ -29,9 +29,9 @@
                         <th>Sl No</th>
                         <th>Name </th>
                         <th>Phone</th>
-                        <th>Email</th>
-                        <th>Designation</th>
-                        <th>Office </th>
+                        <th>group</th>
+                        <!-- <th>Designation</th>
+                        <th>Office </th> -->
                        
                     </thead>
                     <tbody>
@@ -58,9 +58,9 @@
                             <td><?php echo $row[1]; ?></td>
                             <td><?php echo trim($row[2]); ?> </td>
                             
-                            <td><?php echo trim($row[4]); ?> </td>
-                            <td><?php echo trim($row[5]); ?> </td>
-                            <td><?php echo trim($row[6]); ?> </td>
+                            <td><?php echo trim($row[3]); ?> </td>
+                            <!-- <td><?php //echo trim($row[5]); ?> </td>
+                            <td><?php //echo trim($row[6]); ?> </td> -->
                            
                         </tr>
                         <?php
@@ -108,6 +108,40 @@
      }
  }
 
+ if(isset($_POST['action']) && $_POST['action'] == 'import_excel_groupe'){
+  //  print_r($_POST);
+  //    exit;
+ //$tableData = stripcslashes($_POST['tableData']);
+
+ // Decode the JSON array
+   //$tableData = json_decode($_POST['tableData'][0],TRUE);
+   //print_r();
+   foreach($_POST['tableData'] as $data){
+   // print_r($data);
+    if($data['group'] == 12){
+        $name = explode(' ',$data['name']);
+        if(count($name)==3){
+          $fname = $name[0].' '.$name[1];
+          $lame = $name[2];
+        }else{
+          $fname = $name[0];
+          $lame = $name[1];
+        }
+       
+        $update_sql = "UPDATE `tbl_new_recruite` SET `program_id` = '12' WHERE f_name = '".$fname."' AND l_name = '".$lame."' AND program_id = 9 ";
+        $db->update_dir( $update_sql);
+        $res = $db->getResult();
+        print_r($res);
+    }
+   
+      //$data['batch_id'] = 3;
+     
+  //    print_r($data);
+  //    exit;
+    
+  
+   }
+}
 
   function split_name($name) {
     $name = trim($name);

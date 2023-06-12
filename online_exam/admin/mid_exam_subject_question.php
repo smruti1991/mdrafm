@@ -44,7 +44,7 @@ include('header.php');
                                                 <option value="0">Select Syllabus</option>
                                                 <?php
                                                 $object->query = "
-                                                SELECT * FROM tbl_sylabus_master 
+                                                SELECT * FROM tbl_sylabus_master WHERE trng_type = 3
                                                 ";
                                                 
                                                 $res = $object->get_result();
@@ -57,13 +57,13 @@ include('header.php');
                                                 ?>
                                             </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <!-- <div class="col-md-3">
                                         <label>Term</label>
                                         <select name="term_id" id="term_id" class="form-control" required>
                                             <option value="0">Select Term</option>
                                             
                                         </select>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-3">
                                         <label>Paper</label>
                                         <select name="paper_id" id="paper_id" class="form-control" required>
@@ -98,7 +98,7 @@ include('header.php');
                                     <thead>
                                         <tr>
                                             <th>Syllabus Name</th>
-                                            <th>Term</th>
+                                           
                                             <th>Paper</th>
                                             <th>Question</th>
                                             <th>Option 1</th>
@@ -180,7 +180,6 @@ include('header.php');
         		<div class="modal-footer">
           			<input type="hidden" name="hidden_id" id="hidden_id" />
                       <input type="hidden" name="syllabus_id" id="qsyllabus_id" />
-                      <input type="hidden" name="term_id" id="qterm_id" />
                       <input type="hidden" name="paper_id" id="qpaper_id" />
 
           			<input type="hidden" name="action" id="action" value="Add" />
@@ -197,7 +196,6 @@ include('header.php');
     function showExamQstions(){
 
         let syllabus_id = $('#syllabus_id').val();
-        let term_id = $('#term_id').val();
         let paper_id = $('#paper_id').val();
 
         var dataTable = $('#exam_subject_question_table').DataTable({
@@ -209,7 +207,7 @@ include('header.php');
             "ajax" : {
                 url:"exam_subject_question_action.php",
                 type:"POST",
-                data:{action:'fetch',syllabus_id:syllabus_id,term_id:term_id,paper_id:paper_id,exam_category:1}
+                data:{action:'fetch',syllabus_id:syllabus_id,paper_id:paper_id,exam_category:2}
             },
             "column":[
                 {
@@ -269,11 +267,10 @@ $(document).ready(function(){
 		if($('#exam_subject_question_form').parsley().isValid())
 		{		
             let syllabus = $('#syllabus_id').val();
-            let term = $('#term_id').val();
+           
             let paper = $('#paper_id').val();
 
                 $('#qsyllabus_id').val(syllabus);
-                $('#qterm_id').val(term);
                 $('#qpaper_id').val(paper);
 
            const question_title =  CKEDITOR.instances['exam_subject_question_title'].getData(); 
@@ -427,24 +424,7 @@ $(document).ready(function(){
 
                 data: {
                     syllabus_id: syllabus_id,
-                    action: "select_qustion_term"
-                },
-                success: function(res) {
-                    console.log(res);
-                    $('#term_id').html(res);
-                }
-            })
-        })
-
-        $('#term_id').change(function() {
-            var term_id = $(this).val();
-            $.ajax({
-                type: "POST",
-                url: "exam_action.php",
-
-                data: {
-                    term_id: term_id,
-                    action: "select_paper"
+                    action: "select_mid_paper_qustion"
                 },
                 success: function(res) {
                     console.log(res);
@@ -452,6 +432,8 @@ $(document).ready(function(){
                 }
             })
         })
+
+      
 
 });
 </script>

@@ -93,7 +93,7 @@
                     <div id="question_collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar" style="">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="exam_subject_question.php">Long Term Question</a>
-                            <a class="collapse-item" href="mid_term_exam.php">Mid Term Question</a>
+                            <a class="collapse-item" href="mid_exam_subject_question.php">Mid Term Question</a>
                             <!-- <a class="collapse-item" href="exam_subject.php">Exam Subject</a> -->
                             <!-- <a class="collapse-item" href="exam_subject_question.php">Question</a> -->
                         </div>

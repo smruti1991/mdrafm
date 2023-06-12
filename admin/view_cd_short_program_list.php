@@ -4,11 +4,11 @@
 
 <head>
     <?php 
-    
+   
     include('header_link.php');
     include('../config.php');
     include 'database.php';
-   
+    $db = new Database();
     ?>
     <style>
     .card label {
@@ -28,7 +28,8 @@
 
         <?php include('sidebar.php'); ?>
         <?php
-         $db = new Database();
+        
+         echo 1234;
          $co_role = 0;
          $asst_co_role = 0;
           $db->select('tbl_role_master','*',null,"status=1 AND name = 'short_course_co' OR name = 'short_asst_course_co' ",null,null);

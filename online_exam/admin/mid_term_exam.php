@@ -14,11 +14,6 @@ if (!$object->is_master_user()) {
     header("location:" . $object->base_url . "admin/result.php");
 }
 
-$object->query = "
-SELECT * FROM tbl_mid_program_master 
-WHERE active = 1 ";
-
-$result = $object->get_result();
 
 include('header.php');
 
@@ -47,7 +42,7 @@ include('header.php');
                         <th>Exam Name</th>
                         <th>Examiner Name</th>
                         <th>Program Name</th>
-                        <th>Term Name</th>
+                       
                         <th>Paper Name</th>
                         <th>Exam Date & Time</th>
                         <th>Exam Duration</th>
@@ -62,14 +57,13 @@ include('header.php');
                     <?php
                         $object->query = "
                         SELECT  m.id,m.exam_title, f.name as faculty_name, p.prg_name as program_name, 
-		                t.term, pm.paper_code,m.exam_date_time,m.exam_duration,m.total_question,
-                        m.marks_per_right_answer,m.marks_per_wrong_answer,m.status,m.exam_code FROM `tbl_exam_master` m 
+		                mp.paper_code,m.exam_date_time,m.exam_duration,m.total_question,
+                        m.marks_per_right_answer,m.marks_per_wrong_answer,m.status,m.exam_code 
+                        FROM `tbl_exam_master` m 
                         JOIN `tbl_faculty_master` f ON m.examiner_id = f.id
-                        JOIN `tbl_program_master` p ON m.program_id = p.id
-                        JOIN `tbl_term_master` t ON m.term_id = t.id
-                        JOIN `tbl_paper_master` pm ON m.paper_id = pm.id
-
-                        WHERE m.exam_category =2
+                        JOIN `tbl_mid_program_master` p ON m.program_id = p.id
+                        JOIN `tbl_mid_paper_master` mp ON mp.id = m.paper_id
+                         WHERE m.exam_category = 2
                         ";
                         
                         $res_data = $object->get_result();
@@ -115,7 +109,6 @@ include('header.php');
                                 <td><?php echo $exam_row['exam_title']; ?></td>
                                 <td><?php echo $exam_row['faculty_name']; ?></td>
                                 <td><?php echo $exam_row['program_name']; ?></td>
-                                <td><?php echo $exam_row['term']; ?></td>
                                 <td><?php echo $exam_row['paper_code']; ?></td>
                                 <td><?php echo $exam_row['exam_date_time']; ?></td>
                                 <td><?php echo $exam_row['exam_duration'].' Minutes'; ?></td>
@@ -197,7 +190,13 @@ include('footer.php');
                         <select name="program_id" id="program_id" class="form-control" required>
                             <option value="">Select Programme</option>
                             <?php
-                            foreach ($result as $row) {
+                            $object->query = "
+                            SELECT * FROM tbl_mid_program_master WHERE active = 1
+                           ";
+                            
+                            $res2 = $object->get_result();
+                            foreach ($res2 as $row) {
+                              
                                 echo '
                                 <option value="' . $row["id"] . '">' . $row["prg_name"] . '</option>
                                 ';
@@ -284,7 +283,7 @@ include('footer.php');
                 <div class="modal-footer">
                     <input type="hidden" name="hidden_id" id="hidden_id" />
                     <input type="hidden" name="action" id="action" value="Add" />
-                    <input type="hidden" name="exam_category" id="action" value="1" />
+                    <input type="hidden" name="exam_category" id="action" value="2" />
                     <input type="submit" name="submit" id="submit_button" class="btn btn-success" value="Add" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -364,22 +363,6 @@ include('footer.php');
 
                 data: {
                     program_id: program_id,
-                    action: "select_term"
-                },
-                success: function(res) {
-                    console.log(res);
-                    $('#term_id').html(res);
-                }
-            })
-        })
-        $('#term_id').change(function() {
-            var term_id = $(this).val();
-            $.ajax({
-                type: "POST",
-                url: "mid_term_exam_action.php",
-
-                data: {
-                    term_id: term_id,
                     action: "select_paper"
                 },
                 success: function(res) {
@@ -388,6 +371,7 @@ include('footer.php');
                 }
             })
         })
+        
 
         $('#add_exam').click(function() {
 

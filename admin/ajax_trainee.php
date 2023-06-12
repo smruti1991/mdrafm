@@ -999,7 +999,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'accept_inservice_trainee') {
     $res = $db->getResult();
     if ($res) {
         echo "success";
+       
     }
+    exit;
 }
 if (isset($_POST['action']) && $_POST['action'] == 'check_inservice_trainee') {
 
@@ -1038,8 +1040,3 @@ if (isset($_POST['action']) && $_POST['action'] == 'send_mdrafm') {
         echo "success";
     }
 } ?>
-<script>
-    $(".btn_close").click(function() {
-        $(".p_model").modal('hide');
-    });
-</script>

@@ -1196,7 +1196,7 @@ function Accept_trainee(id, tbl) {
         },
         success: function(res) {
             console.log(res);
-            if (res == "success") {
+            if (res.trim() == "success") {
                 sessionStorage.message = "Accepted successfully";
                 sessionStorage.type = "success";
                 location.reload();

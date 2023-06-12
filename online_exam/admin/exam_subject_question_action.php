@@ -10,11 +10,21 @@ if(isset($_POST["action"]))
 {
 	if($_POST["action"] == 'fetch')
 	{
+		if($_POST['exam_category']==1){
+			$sub_select = "q.exam_subject_question_id,s.descr,t.term,p.paper_code,q.exam_subject_question_title,q.exam_subject_question_answer";
+			$sub_query = "JOIN `tbl_term_master` t ON q.term_id = t.id
+				JOIN `tbl_paper_master` p ON q.paper_id = p.id ";
+		}else{
+			$sub_select = "q.exam_subject_question_id,s.descr,p.paper_code,q.exam_subject_question_title,q.exam_subject_question_answer";
+			$sub_query = " JOIN `tbl_mid_paper_master` p ON q.paper_id = p.id ";
+				
+		}
 		 $where_query = 'WHERE 1=1 ';
 		 if($_POST["syllabus_id"] != 0 ){
 			$where_query .= ' AND s.id = '.$_POST["syllabus_id"];
 		 }
-		 if($_POST["term_id"] != 0 ){
+
+		 if( isset($_POST["term_id"]) && $_POST["term_id"] != 0 ){
 			$where_query .= ' AND t.id = '.$_POST["term_id"];
 		 }
 		 if($_POST["paper_id"] != 0 ){
@@ -26,10 +36,9 @@ if(isset($_POST["action"]))
 		$output = array();
 
 		 $main_query = "
-				SELECT q.exam_subject_question_id,s.descr,t.term,p.paper_code,q.exam_subject_question_title,q.exam_subject_question_answer FROM `exam_subject_question` q 
+				SELECT $sub_select FROM `exam_subject_question` q 
 				JOIN `tbl_sylabus_master` s ON q.syllabus_id= s.id
-				JOIN `tbl_term_master` t ON q.term_id = t.id
-				JOIN `tbl_paper_master` p ON q.paper_id = p.id 
+				$sub_query
 				".$where_query;
 
 		$search_query = '';
@@ -79,7 +88,10 @@ if(isset($_POST["action"]))
 		{
 			$sub_array = array();
 			$sub_array[] = html_entity_decode($row["descr"]);
-			$sub_array[] = html_entity_decode($row["term"]);
+			if($_POST['exam_category']==1){
+				$sub_array[] = html_entity_decode($row["term"]);
+			}
+			
 			$sub_array[] = html_entity_decode($row["paper_code"]);
 			$sub_array[] = $row["exam_subject_question_title"];
 			$sub_array[] = $object->Get_question_option_data($row['exam_subject_question_id'], 1);
@@ -135,6 +147,11 @@ if(isset($_POST["action"]))
 
 	if($_POST["action"] == 'Add')
 	{
+		if(isset($_POST["term_id"])){
+			$term_id = $_POST["term_id"];
+		}else{
+			$term_id =0;
+		}
 		$error = '';
 
 		$success = '';
@@ -142,7 +159,7 @@ if(isset($_POST["action"]))
 		// exit;
 		$data = array(
 			':syllabus_id'					=>	$_POST["syllabus_id"],
-			':term_id'				        =>	$_POST["term_id"],
+			':term_id'				        =>	$term_id,
 			':paper_id'				        =>	$_POST["paper_id"],
 			':exam_subject_question_title'	=>	$_POST["exam_subject_question_title"],
 			':exam_subject_question_answer'	=>	$_POST["exam_subject_question_answer"]
@@ -335,7 +352,22 @@ if(isset($_POST["action"]))
 		}
 
 
-	}		
+	}
+	
+	if($_POST["action"] == 'select_mid_paper_qustion')
+	{
+
+		$object->query = " SELECT * FROM `tbl_mid_paper_master` WHERE syllabus_id  = '".$_POST["syllabus_id"]."' ";
+
+        $result = $object->get_result();
+		echo '<option value="0" >Select Paper</option>';
+		foreach($result as $row)
+		{
+			echo '<option value="'.$row['id'].'">'.$row['paper_code'].'-'.$row['paper_title'].'</option>';
+		}
+
+
+	}
 
 
 }

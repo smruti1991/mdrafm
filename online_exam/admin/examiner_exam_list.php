@@ -163,8 +163,13 @@ function setQuestion(exam_id,program_id){
         success:function(data)
         {
             console.log(data);
-            $('#set_qstn').attr('disabled', false);
-            dataTable.ajax.reload();
+            if(data.trim() == 'success'){
+                $('#set_qstn').attr('disabled', false);
+                dataTable.ajax.reload();
+            }else{
+               // alert(data.trim());
+            }
+           
 
         }
    })
@@ -195,6 +200,7 @@ function save_modify_exam_time(exam_id,program_id){
         success:function(data)
         {
             console.log(data);
+
             $('#modify_time').attr('disabled', false);
             if(data.trim() == 'success'){
                 location.reload();

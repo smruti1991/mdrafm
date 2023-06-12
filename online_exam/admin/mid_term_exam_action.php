@@ -198,7 +198,7 @@ if(isset($_POST["action"]))
 				':examiner_id'		=>	$_POST["examiner_id"],
 				':asst_examiner_id'		=>	$_POST["asst_examiner_id"],
 				':program_id'		=>	$_POST["program_id"],
-				':term_id'		    =>	$_POST["term_id"],
+				
 				':paper_id'		    =>	$_POST["paper_id"],
 				':exam_date_time'	=>	$dt,
 				':exam_duration'	=>	$_POST["exam_duration"],
@@ -213,9 +213,9 @@ if(isset($_POST["action"]))
 			
 			$object->query = "
 			INSERT INTO tbl_exam_master 
-			(exam_category,exam_title, examiner_id,asst_examiner_id, program_id, term_id, paper_id, exam_date_time,exam_duration,status,
+			(exam_category,exam_title, examiner_id,asst_examiner_id, program_id, paper_id, exam_date_time,exam_duration,status,
 			total_question,marks_per_right_answer,marks_per_wrong_answer,exam_code,financial_year) 
-			VALUES ( '".$_POST["exam_category"]."','".$_POST["exam_title"]."','".$_POST["examiner_id"]."' ,'".$_POST["asst_examiner_id"]."' ,'".$_POST["program_id"]."','".$_POST["term_id"]."',
+			VALUES ( '".$_POST["exam_category"]."','".$_POST["exam_title"]."','".$_POST["examiner_id"]."' ,'".$_POST["asst_examiner_id"]."' ,'".$_POST["program_id"]."',
 			'".$_POST["paper_id"]."','".$dt."','".$_POST["exam_duration"]."',1,'".$_POST["total_question"]."',
 			'".$_POST["marks_per_right_answer"]."','".$_POST["marks_per_wrong_answer"]."' ,'".$code."',2)
 			";
@@ -426,35 +426,24 @@ if(isset($_POST["action"]))
 		echo '<div class="alert alert-success">Exam Send To Tranning Inchaarge for Approval</div>';
 	}	
 
-	if($_POST["action"] == 'select_term')
+	if($_POST["action"] == 'select_paper')
 	{
 
-		$object->query = " SELECT t.id,t.term FROM `tbl_program_master` p JOIN `tbl_term_master` t ON p.syllabus_id = t.syllabus_id
-		 WHERE p.id  = '".$_POST["program_id"]."' ";
+		$object->query = " SELECT p.id,p.paper_code,p.paper_title FROM `tbl_mid_program_master`mp JOIN `tbl_mid_paper_master` p ON mp.syllabus_id = p.syllabus_id
+
+		WHERE mp.id = '".$_POST["program_id"]."' ";
 
         $result = $object->get_result();
+		
 		echo '<option value="0" >Select term</option>';
 		foreach($result as $row)
 		{
-			echo '<option value="'.$row['id'].'">'.$row['term'].'</option>';
+			echo '<option value="'.$row['id'].'">'.$row['paper_code'].'-'.$row['paper_title'].'</option>';
 		}
 
 
 	}
-	if($_POST["action"] == 'select_paper')
-	{
-      // echo "SELECT * FROM `tbl_paper_master` term_id = '".$_POST["term_id"]."'";
-		$object->query = " SELECT * FROM `tbl_paper_master` WHERE term_id = '".$_POST["term_id"]."' ";
-
-        $result = $object->get_result();
-        echo '<option value="0" >Select Paper</option>';
-		foreach($result as $row)
-		{
-			echo '<option value="'.$row['id'].'">'.$row['paper_code'].'-'.$row['title'].'</option>';
-		}
-
-
-	}		
+		
 
 }
 

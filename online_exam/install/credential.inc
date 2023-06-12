@@ -1,10 +1,9 @@
-
-	<?php 
-		$gdb_name = "mdrafm";
+<?php 
+		$gdb_name = "mdrafm_live";
 		$gdb_user_name = "root";
-		$gdb_password = "MdR@6%&!#$1";
+		$gdb_password = "";
 		$gdb_host = "localhost";
-		$gbase_url = "";
+		$gbase_url = "http://localhost/mdrafm/online_exam/";
 
 	?>
 	

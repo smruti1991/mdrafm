@@ -68,6 +68,7 @@ include('header.php');
                         <th>Sl No</th>
                         <th> Name</th>
                         <th>Phone No.</th>
+                        <th>Question Set</th>
                         <th>Total Mark</th>
                         <th>Indivitual Result</th>
                     </tr>
@@ -75,10 +76,14 @@ include('header.php');
                 <tbody style="background-color:#eaf3f3">
                   <?php
                  $object->query = "
-                   SELECT tbl_trainee_info.user_id,tbl_trainee_info.first_name,tbl_trainee_info.last_name,tbl_trainee_info.mobile,sum(tbl_qs_ans.marks) as tot_mark FROM `tbl_trainee_info` 
-                   join tbl_trainee_exam_info tbl_exm_inf on tbl_exm_inf.trainee_id = tbl_trainee_info.user_id join tbl_exam_question_answer as tbl_qs_ans on
-                    tbl_qs_ans.trainee_exam_info_id=tbl_exm_inf.id
-                     WHERE tbl_exm_inf.exam_status = 1 AND tbl_exm_inf.exam_id = '".$post_exam_id."' group by tbl_qs_ans.trainee_exam_info_id";
+                   SELECT tbl_exm_inf.id,tbl_trainee_info.user_id,tbl_trainee_info.first_name,tbl_trainee_info.last_name,tbl_trainee_info.mobile,sum(tbl_qs_ans.marks) as tot_mark 
+                   FROM `tbl_trainee_info` 
+                   join tbl_trainee_exam_info tbl_exm_inf on tbl_exm_inf.trainee_id = tbl_trainee_info.user_id 
+                   join tbl_exam_question_answer as tbl_qs_ans on  tbl_qs_ans.trainee_exam_info_id=tbl_exm_inf.id
+
+                   WHERE tbl_exm_inf.exam_status = 1 AND tbl_exm_inf.exam_id = '".$post_exam_id."' 
+                   group by tbl_qs_ans.trainee_exam_info_id";
+
                     // $object->query = "
                     // SELECT i.id,q.exam_subject_question_title,a.marks,a.status as ans_status,tbl_trainee_info.first_name,tbl_trainee_info.last_name,tbl_trainee_info.mobile FROM `tbl_trainee_exam_info` i 
                     // JOIN `tbl_exam_question_answer` a ON i.id = a.trainee_exam_info_id
@@ -93,8 +98,10 @@ include('header.php');
                         $final_mark = 0;
                         foreach($mark_result as $mark_row){
                             $count++;
+                           // print_r($mark_row);
                             // $n = (int)($mark_row['marks']) ;
                         //$final_mark= $final_mark + $n;
+                        $qstn_set = $object->Get_exam_question_set($mark_row['id']);
                         $name=$mark_row['first_name'].' '.$mark_row['last_name'];
                         $phone=$mark_row['mobile'];
                         $tot_mark=$mark_row['tot_mark'];
@@ -108,9 +115,11 @@ include('header.php');
                             <td><?php echo $count ?></td>
                             <td><?php echo $name ?></td>
                             <td><?php echo $phone ?></td>
+                            <td><?php echo $qstn_set ?></td>
                             <td><?php echo $tot_mark ?></td>
                             <td>
                             <button type="button" class="btn btn-warning" onclick="get_indivitual_result(<?=$exam_id?>,<?=$traniee_user_id?>,'<?=$name?>')">View</button>
+                            <input type="button" class="printbtn" style="background:#3292a2;" onclick="datapost('result_pdf.php',{exam_id: <?php echo $exam_id ?> ,traniee_user_id: '<?php echo $traniee_user_id ?>',name:<?php echo $name; ?> })" value="Print" />
                         </td>
                             </tr>
                         <?php

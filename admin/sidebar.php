@@ -27,7 +27,7 @@
                 </a>
             </li>
             <?php
-                // print_r($_SESSION);
+                 print_r($_SESSION);
                if($_SESSION['username'] == "admin" || $_SESSION['username'] == "admin2" || $_SESSION['username'] == "admin3"  ){
                  ?>
             <!-- master start -->
@@ -645,7 +645,7 @@
                     //print_r( $_SESSION['roll_id']);
                     $roll_id = explode(',',$_SESSION['roll_id']);
                     foreach($roll_id as $roll){
-                        //print_r($roll);
+                        print_r($roll);
                         echo '<br>';
                         switch ($roll) {
                             case '8':
@@ -991,7 +991,7 @@
                                  $res = $db->getResult();
                                  //print_r($res);
                                  foreach($res as $row){
-                                    //print_r($row);
+                                    print_r($row);
                                     $prog_id = $row['program_id'];
                                     $trng_type = $row['trng_type'];
                                  }

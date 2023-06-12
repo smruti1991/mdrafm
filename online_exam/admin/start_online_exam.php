@@ -260,9 +260,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.finish_exam', function() {
-        if (confirm("Are you sure to finish exam!") == true) {
+        if (confirm("Are you sure to finish exam!!!") == true) {
             $("#exam_timer").TimeCircles().destroy();
-            location.href="index.php";
+            location.href="dashboard.php";
             // atapost('view_exam_result.php', {
             //     exam_id: <?php echo $exam_id ?>
             // });

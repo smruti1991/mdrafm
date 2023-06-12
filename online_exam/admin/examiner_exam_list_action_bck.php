@@ -228,7 +228,7 @@ if(isset($_POST["action"]))
                   //print_r($object->query);
             }
         }else{
-            echo "No Question available in this paper For set A";
+            echo "No Question available in this paper";
             exit;
 
         }
@@ -236,7 +236,7 @@ if(isset($_POST["action"]))
 
        // print_r($setA_qustn_ids);
         $setA_qustn_id = implode(",",$setA_qustn_ids);
-       // print_r($setA_qustn_id);
+        print_r($setA_qustn_id);
        
 
          //select set B  question for exam
@@ -271,12 +271,12 @@ if(isset($_POST["action"]))
                   $object->execute($data);
             }
         }else{
-            echo "No Question available in this paper for Set B";
+            echo "No Question available in this paper";
             exit;
 
         }
 
-//exit ;
+exit ;
         //end qustion box
 
         $error = '';
@@ -315,43 +315,41 @@ if(isset($_POST["action"]))
             
 
            
-                 //update set_question_paper   
+            //update set_question_paper   
 
           
-                    $object->query = "
-                UPDATE tbl_exam_master 
-                SET set_question_paper = 1
-                WHERE id = '".$_POST["exam_id"]."'
-                ";
+            $object->query = "
+		UPDATE tbl_exam_master 
+		SET set_question_paper = 1
+		WHERE id = '".$_POST["exam_id"]."'
+		";
 
-                $object->execute();
+		$object->execute();
 
-                    //print_r($row);
+            //print_r($row);
 
-               $qustion_set =   ($trainee_info_id % 2)+1;
+       
 
             $object->query = "
-            SELECT exam_question_id,qstn_set
-            FROM `final_exam_question` WHERE qstn_set ='".$qustion_set."' AND exam_id = '".$_POST["exam_id"]."'
+            SELECT exam_question_id
+            FROM `final_exam_question` WHERE exam_id = '".$_POST["exam_id"]."'
             ORDER BY rand() " ;
 
             $res_qstn = $object->get_result();
-            //print_r($res_qstn);
             $cnt = 0;
             foreach ($res_qstn as $row_qstn) {
                 $cnt++;
                 $data = array(
                     ':trainee_exam_info_id'	=>	$trainee_info_id,
                     ':qstn_sl_no' =>  $cnt,
-                    ':qstn_set'		=>	$row_qstn["qstn_set"],
-                    ':exam_question_id'	=>	$row_qstn["exam_question_id"]
+                    ':exam_question_id'		=>	$row_qstn["exam_question_id"]
                     
                 );
         
                 $object->query = "
                 INSERT INTO tbl_exam_question_answer 
-                (trainee_exam_info_id,qstn_sl_no,qstn_set,exam_question_id) 
-                VALUES (:trainee_exam_info_id,:qstn_sl_no,:qstn_set,:exam_question_id)
+                (trainee_exam_info_id,qstn_sl_no,exam_question_id) 
+                VALUES (:trainee_exam_info_id,:qstn_sl_no,:exam_question_id)
                 ";
         
                   $object->execute($data);
@@ -424,26 +422,26 @@ if(isset($_POST["action"]))
 
         
         ?>
-<table class="table table-bordered" id="trainne_attn_table" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Sl No</th>
-            <th>Photo</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Exam Date & Time</th>
-            <th>Exam Duration</th>
-            <th style="width:135px">Attendance <br>
-                <label class="form-check-label">Present All</label>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input class="form-check-input checkAll2" type="checkbox" id="checkAll">
+         <table class="table table-bordered" id="trainne_attn_table" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Exam Date & Time</th>
+                        <th>Exam Duration</th>
+                        <th style="width:135px">Attendance <br>
+                           <label class="form-check-label">Present All</label>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <input class="form-check-input checkAll2" type="checkbox" id="checkAll">
 
-
-            </th>
-
-        </tr>
-    </thead>
-    <tbody>
-        <?php
+                           
+                        </th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
                         $object->query = "
                         SELECT e.*,CONCAT(i.first_name,' ',i.last_name)as trainee_name,i.mobile,d.photo,e.attandance FROM `tbl_trainee_exam_info` e 
                         JOIN `tbl_traniee_documents` d ON e.trainee_id = d.user_id 
@@ -458,40 +456,39 @@ if(isset($_POST["action"]))
                             
                             $count++;
                            ?>
-        <tr>
-            <td>
-                <?php echo $count; ?>
-                <input type="hidden" name="trainne_info_id" id="trainne_info_id" value="<?php echo $row['id']; ?>">
-            </td>
-            <td>
-                <img src="<?php echo $object->base_url.'../admin/uploads/'.$row['photo']; ?>" alt="image"
-                    class="img-fluid img-thumbnail" width="75" height="75" />
-            </td>
-            <td><?php echo $row['trainee_name']; ?></td>
-            <td><?php echo $row['mobile']; ?></td>
-            <td><?php echo $row['exam_date_time']; ?></td>
-            <td><?php echo $row['exam_duration'].' Minutes'; ?></td>
-            <td style="width:135px">
-                <div class='atten' id="attendance_<?php echo  $row['exam_id'] ?>">
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label" for="inlineCheckbox1">Present</label>
-                        &nbsp;&nbsp;
-                        <input class="form-check-input" type="checkbox" name="atten" id="present" value="1"
-                            <?php echo ($row['attandance']== 1)?'checked':'' ?> style="opacity: 1;visibility: visible;">
-                    </div>
+                             <tr>
+                                <td>
+                                    <?php echo $count; ?>
+                                    <input type="hidden" name="trainne_info_id" id="trainne_info_id" value="<?php echo $row['id']; ?>">
+                                </td>
+                                <td>
+                                  <img src="<?php echo $object->base_url.'../admin/uploads/'.$row['photo']; ?>" alt="image" class="img-fluid img-thumbnail" width="75" height="75" />
+                                </td>
+                                <td><?php echo $row['trainee_name']; ?></td>
+                                <td><?php echo $row['mobile']; ?></td>
+                                <td><?php echo $row['exam_date_time']; ?></td>
+                                <td><?php echo $row['exam_duration'].' Minutes'; ?></td>
+                                <td style="width:135px">
+                                    <div class='atten' id="attendance_<?php echo  $row['exam_id'] ?>">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label" for="inlineCheckbox1">Present</label>
+                                            &nbsp;&nbsp;
+                                            <input class="form-check-input" type="checkbox" name="atten" id="present" value="1"
+                                            <?php echo ($row['attandance']== 1)?'checked':'' ?> style="opacity: 1;visibility: visible;">
+                                        </div>
 
-                </div>
-                </div>
-            </td>
+                                    </div>
+                                    </div>
+                                </td>
+                                
+                                
 
-
-
-        </tr>
-        <?php
+                             </tr>
+                           <?php
                         }
                     ?>
-    </tbody>
-    <?php
+                </tbody>
+        <?php
     }
  
     if($_POST["action"] == 'save_attandance'){

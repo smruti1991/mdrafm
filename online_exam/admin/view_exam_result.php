@@ -47,6 +47,8 @@ $name=$_POST['name'];
                     <tr>
                         <th>Sl</th>
                         <th>Question Name</th>
+                        <th>Right Option</th>
+                        <th>Given Option</th>
                         <th>Answer</th>
                         <th>Mark</th>
                     </tr>
@@ -54,7 +56,7 @@ $name=$_POST['name'];
                 <tbody style="background-color:azure">
                   <?php
                     $object->query = "
-                    SELECT i.id,q.exam_subject_question_title,a.marks,a.status as ans_status FROM `tbl_trainee_exam_info` i 
+                    SELECT i.id,q.exam_subject_question_title,q.exam_subject_question_answer,a.trainee_ans_option,a.marks,a.status as ans_status FROM `tbl_trainee_exam_info` i 
                     JOIN `tbl_exam_question_answer` a ON i.id = a.trainee_exam_info_id
                     JOIN `exam_subject_question` q ON a.exam_question_id =  q.exam_subject_question_id 
                     WHERE i.exam_id = '".$exam_id."' AND i.trainee_id = '".$user_id."'
@@ -74,6 +76,8 @@ $name=$_POST['name'];
                     
                         <td><?php echo $count ?></td>
                         <td><?php echo $mark_row['exam_subject_question_title'] ?></td>
+                        <td><?php echo $mark_row['exam_subject_question_answer'] ?></td>
+                        <td><?php echo $mark_row['trainee_ans_option'] ?></td>
                         <td>
                             <?php 
                             
@@ -104,6 +108,8 @@ $name=$_POST['name'];
                     }
                     
                     echo '<tr>
+                         <td></td>
+                         <td></td>
                          <td></td>
                          <td></td>
                          <td>Total</td>

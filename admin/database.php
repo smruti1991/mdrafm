@@ -6,7 +6,7 @@ class Database
        private $db_host = 'localhost';
        private $db_user = 'root';
        private $db_pass = '';
-       private $db_name = 'mdrafm';
+       private $db_name = 'mdrafm_live';
        private $mysqli = '';
 
     private $result = array();
@@ -102,7 +102,7 @@ class Database
 
     public function update_dir($sql)
     {
-        // echo $sql; 
+         echo $sql; 
         if ($this->mysqli->query($sql)) {
             array_push($this->result, $this->mysqli->affected_rows);
             array_push($this->result, "update successfully");

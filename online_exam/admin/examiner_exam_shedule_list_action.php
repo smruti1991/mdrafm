@@ -155,10 +155,10 @@ if(isset($_POST["action"]))
         $exam_id = $_POST["exam_id"];
         $user_id = $_POST["user_id"];
         $secret_code = $_POST["secret_code"];
-
+//exit;
         
         $object->query = "SELECT i.*,m.exam_code FROM `tbl_trainee_exam_info` i JOIN `tbl_exam_master` m ON i.exam_id = m.id 
-        WHERE i.trainee_id = ".$user_id;
+        WHERE m.id = '".$exam_id."' AND i.trainee_id = ".$user_id;
 
        $object->execute();
 

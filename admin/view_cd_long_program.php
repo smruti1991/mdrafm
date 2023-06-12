@@ -8,7 +8,7 @@
     include('header_link.php');
     include('../config.php');
     include 'database.php';
-   
+    $db = new Database();
     ?>
     <style>
     .card label {
@@ -71,7 +71,7 @@
                                         <tbody>
                                             <?php 
                                
-                               $db = new Database();
+                              
                              
                                            
                                  $db->select('tbl_faculty_master','id,name',null,'phone='.$_SESSION['username'],null,null);

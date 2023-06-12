@@ -230,6 +230,50 @@ class database
 			return $row['total_question'];
 		}
 	}
+	function Get_exam_question_set($id)
+	{
+		$this->query = "
+		SELECT qstn_set FROM `tbl_exam_question_answer` WHERE trainee_exam_info_id = $id GROUP BY qstn_set;
+		";
+		$result = $this->get_result();
+		foreach($result as $row)
+		{
+			return $row['qstn_set'];
+		}
+	}
+	
+	function Get_question_paper_detail($exam_id)
+	{
+		$this->query = "
+		SELECT exam_category,program_id,paper_id FROM tbl_exam_master 
+		WHERE id = '$exam_id'
+		";
+		$result = $this->get_result();
+		$data = array();
+		foreach($result as $row)
+		{
+			
+
+		    if($row['exam_category']==1 ){
+				$tbl_program = "tbl_program_master";
+			}else{
+				$tbl_program = "tbl_mid_program_master";
+			}
+            
+			$this->query = "
+				SELECT syllabus_id FROM $tbl_program
+				WHERE id = '".$row['program_id']."'
+				";
+				$result2 = $this->get_result();
+                foreach($result2 as $row2)
+		        {
+                     $data[] = $row2['syllabus_id'];
+					 $data[] = $row['paper_id'];
+				}
+		}
+
+		return $data;
+	}
 
 	function Can_add_question_in_this_subject($exam_subject_id)
 	{
@@ -508,7 +552,7 @@ class database
 
 	// function if_table_exists()
 	// {
-	// 	$this->query = "
+	// 	$this->query = " 
 	// 	SHOW TABLES
 	// 	";
 

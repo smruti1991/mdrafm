@@ -96,14 +96,18 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th style="text-align:center;">Phone</th>
-                                            <th style="text-align:center;width: 8rem;">Status</th>
+                                            <!-- <th style="text-align:center;width: 8rem;">Status</th> -->
                                         </thead>
                                         <tbody>
                                             <?php
 
 
                                                 $count = 0;
-                                                $db->select('tbl_new_recruite', "*", null, " trng_type = '$trng_type' AND program_id =" . $porg_id, null, null);
+                                                $trainee_sql = "SELECT n.f_name,n.l_name,n.email,n.phone,n.mdrafm_status as r_status,t.status,t.mdrafm_status   FROM `tbl_new_recruite` n 
+                                                JOIN `tbl_trainee_info` t ON t.mobile = n.phone
+                                                WHERE n.program_id=  $porg_id AND t.mdrafm_status = 1  ORDER BY f_name";
+
+                                                $db->select_sql($trainee_sql);
                                                         
                                                 // print_r( $db->getResult());
                                                 foreach ($db->getResult() as $row) {
@@ -117,11 +121,11 @@
                                                 <td> <?php echo $row['f_name']."".$row['l_name'] ?></td>
                                                 <td> <?php echo $row['email']  ?></td>
                                                 <td style="text-align:center;"><?php echo $row['phone']; ?> </td>
-                                                <td>
+                                                <!-- <td>
                                                     <?php
-                                                       echo ($row['mdrafm_status'] == 1)?'Registered':'Not Registered';
+                                                       //echo ($row['mdrafm_status'] == 1)?'Registered':'Not Registered';
                                                     ?>
-                                                </td>
+                                                </td> -->
 
                                             </tr>
                                                                                         <?php
