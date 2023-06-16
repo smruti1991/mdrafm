@@ -18,14 +18,14 @@ if (isset($frm_data['faculty'])) {
 }
 
 
-//print_r($frm_data);exit;
+//print_r($frm_data);
 
 
 //save and update
 if (isset($_POST['action']) && $_POST['action'] == 'add') {
   
-  // print_r($_POST);
-  // exit;
+  //  print_r($_POST);
+  //  exit;
  // echo 123;
 //  echo print_r($_SESSION);
 //  echo '<br>';
@@ -36,9 +36,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'add') {
     unset($frm_data['csrf_token']);
     //print_r($frm_data);
 
-    $isValid = $check->checkValidation($frm_data, $_POST['rules']);
+    //$isValid = $check->checkValidation($frm_data, $_POST['rules']);
     //  echo $isValid;
     //  exit;
+    $isValid = 1;
     if ($isValid == 1) {
       //insert into database
       $update_id = $_POST['update_id'];

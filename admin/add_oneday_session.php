@@ -234,7 +234,8 @@
             table = "tbl_inhouse_time_table";
         }
         else if(trng_type == 5 || trng_type ==8){
-            URL = "sponsored_one_day_session_template.php";
+           // URL = "sponsored_one_day_session_template.php";
+            URL = "sponsored_time_table_template.php";
             table = "tbl_sponsored_time_table.php";
         }
         else if(trng_type == 1 || trng_type ==2){

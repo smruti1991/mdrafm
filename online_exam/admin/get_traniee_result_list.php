@@ -108,6 +108,11 @@ include('header.php');
                         $traniee_user_id=$mark_row['user_id'];
                         $final_mark = $final_mark + $tot_mark;
                         $exam_id=$post_exam_id;
+                        if($qstn_set == 1){
+                            $Qset = 'A'; 
+                        }else{
+                            $Qset = 'B';
+                        }
                         ?>
                         <tr>
 
@@ -115,11 +120,11 @@ include('header.php');
                             <td><?php echo $count ?></td>
                             <td><?php echo $name ?></td>
                             <td><?php echo $phone ?></td>
-                            <td><?php echo $qstn_set ?></td>
+                            <td><?php echo $Qset ?></td>
                             <td><?php echo $tot_mark ?></td>
                             <td>
                             <button type="button" class="btn btn-warning" onclick="get_indivitual_result(<?=$exam_id?>,<?=$traniee_user_id?>,'<?=$name?>')">View</button>
-                            <input type="button" class="printbtn" style="background:#3292a2;" onclick="datapost('result_pdf.php',{exam_id: <?php echo $exam_id ?> ,traniee_user_id: '<?php echo $traniee_user_id ?>',name:<?php echo $name; ?> })" value="Print" />
+                            <input type="button" class="printbtn" style="background:#3292a2;" onclick="datapost('result_pdf.php',{exam_id: <?php echo $exam_id ?> ,traniee_user_id: '<?php echo $traniee_user_id ?>',name:'<?php echo $name; ?>',Qset:'<?php echo $Qset; ?>' })" value="Print" />
                         </td>
                             </tr>
                         <?php
@@ -176,5 +181,23 @@ $(document).ready(function() {
        $('#exam_table').DataTable();
 });
 
+function datapost(path, params, method) {
+    //alert(path);
+    method = method || "post"; // Set method to post by default if not specified.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+    for (var key in params) {
+        if (params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+            form.appendChild(hiddenField);
+        }
+    }
+    document.body.appendChild(form);
+    form.submit();
+}
 
 </script>

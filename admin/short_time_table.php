@@ -85,6 +85,7 @@
 
                                         </div>
                                         <input type="hidden" name="type" value="4" id="type" />
+                                        <input type="hidden" name="name"  value="4" id="prog_name" />
                                        
 
                                     </div>
@@ -264,7 +265,10 @@ function add(str, frm, tbl) {
 
 
     var update_id = $('#update_id').val();
-    //console.log(update_id);
+    //console.log(update_id); prog_name
+    let program_name = $('#program_id option:selected').text().trim();
+    $('#prog_name').val(program_name);
+
     $.ajax({
         type: "POST",
         url: "ajax_master.php",
@@ -280,7 +284,7 @@ function add(str, frm, tbl) {
             if (elm[0] == "success") {
                 sessionStorage.message = str + ' ' + elm[1];
                 sessionStorage.type = "success";
-                location.reload();
+               // location.reload();
             }
         }
     })
