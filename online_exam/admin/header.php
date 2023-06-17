@@ -80,6 +80,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="long_term_exam.php">Long Term Exam</a>
                             <a class="collapse-item" href="mid_term_exam.php">Mid Term Exam</a>
+                            <a class="collapse-item" href="surprise_test.php">Surprise Test</a>
                             <!-- <a class="collapse-item" href="exam_subject.php">Exam Subject</a> -->
                             <!-- <a class="collapse-item" href="exam_subject_question.php">Question</a> -->
                         </div>
@@ -94,6 +95,8 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="exam_subject_question.php">Long Term Question</a>
                             <a class="collapse-item" href="mid_exam_subject_question.php">Mid Term Question</a>
+                            <a class="collapse-item" href="surprise_test_question.php">Surprise Test Question</a>
+                            
                             <!-- <a class="collapse-item" href="exam_subject.php">Exam Subject</a> -->
                             <!-- <a class="collapse-item" href="exam_subject_question.php">Question</a> -->
                         </div>
@@ -107,7 +110,12 @@
                   <li class="nav-item">
                         <a class="nav-link" href="examiner_exam_list.php">
                             <i class="fas fa-users-cog"></i>
-                            <span>Exam List</span></a>
+                            <span>Main Exam List</span></a>
+                  </li>
+                  <li class="nav-item">
+                        <a class="nav-link" href="examiner_surprise_exam_list.php">
+                            <i class="fas fa-users-cog"></i>
+                            <span>Surprise Exam List</span></a>
                   </li>
                  <?php
               }

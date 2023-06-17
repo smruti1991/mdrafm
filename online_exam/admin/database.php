@@ -550,6 +550,43 @@ class database
 		}
 	}
 
+	function Get_program($tbl,$program_id)
+	{
+		$this->query = "SELECT prg_name  FROM `$tbl` WHERE id = $program_id";
+
+		$result = $this->get_result();
+		
+		foreach($result as $row)
+		{
+			return $row["prg_name"];
+		}
+	}
+	function Get_term_name($tbl,$term_id)
+	{
+		$this->query = "SELECT term  FROM `$tbl` WHERE id = $term_id";
+		
+		$result = $this->get_result();
+		
+		foreach($result as $row)
+		{
+			return $row["term"];
+		}
+	}
+
+	function Get_paper_name($tbl,$paper_id)
+	{
+		$this->query = "SELECT paper_code  FROM `$tbl` WHERE id = $paper_id";
+		
+		$result = $this->get_result();
+		
+		foreach($result as $row)
+		{
+			return $row["paper_code"];
+		}
+	}
+
+
+
 	// function if_table_exists()
 	// {
 	// 	$this->query = " 
