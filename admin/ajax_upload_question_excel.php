@@ -74,15 +74,15 @@
                         ?>
                         <tr>
                             <td><?php echo trim($row[0]); ?> </td>
+                            <td><?php echo 4 ?> </td>
+                            <td><?php echo 0 ?> </td>
                             <td><?php echo 1 ?> </td>
-                            <td><?php echo 3 ?> </td>
-                            <td><?php echo 17 ?> </td>
-                            <td><?php echo trim($row[1]); ?> </td>
-                            <td><?php echo trim($row[2]); ?> </td>
-                            <td><?php echo trim($row[3]); ?> </td>
                             <td><?php echo trim($row[4]); ?> </td>
                             <td><?php echo trim($row[5]); ?> </td>
-                            <td><?php echo $option; ?> </td>
+                            <td><?php echo trim($row[6]); ?> </td>
+                            <td><?php echo trim($row[7]); ?> </td>
+                            <td><?php echo trim($row[8]); ?> </td>
+                            <td><?php echo trim($row[9]); ?> </td>
                            
   
                         </tr>

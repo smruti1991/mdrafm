@@ -217,20 +217,6 @@ class database
 			return $row['question_option_title'];
 		}
 	}
-	function Get_surprise_question_option_data($exam_subject_question_id, $option_number)
-	{
-		$this->query = "
-		SELECT question_option_title FROM surprise_question_option 
-		WHERE exam_subject_question_id = '$exam_subject_question_id' 
-		AND question_option_number = '$option_number'
-		";
-		
-		$result = $this->get_result();
-		foreach($result as $row)
-		{
-			return $row['question_option_title'];
-		}
-	}
 
 	function Get_exam_total_question($exam_id)
 	{

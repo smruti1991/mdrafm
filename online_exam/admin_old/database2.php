@@ -217,20 +217,6 @@ class database
 			return $row['question_option_title'];
 		}
 	}
-	function Get_surprise_question_option_data($exam_subject_question_id, $option_number)
-	{
-		$this->query = "
-		SELECT question_option_title FROM surprise_question_option 
-		WHERE exam_subject_question_id = '$exam_subject_question_id' 
-		AND question_option_number = '$option_number'
-		";
-		
-		$result = $this->get_result();
-		foreach($result as $row)
-		{
-			return $row['question_option_title'];
-		}
-	}
 
 	function Get_exam_total_question($exam_id)
 	{
@@ -243,50 +229,6 @@ class database
 		{
 			return $row['total_question'];
 		}
-	}
-	function Get_exam_question_set($id)
-	{
-		$this->query = "
-		SELECT qstn_set FROM `tbl_exam_question_answer` WHERE trainee_exam_info_id = $id GROUP BY qstn_set;
-		";
-		$result = $this->get_result();
-		foreach($result as $row)
-		{
-			return $row['qstn_set'];
-		}
-	}
-	
-	function Get_question_paper_detail($exam_id)
-	{
-		$this->query = "
-		SELECT exam_category,program_id,paper_id FROM tbl_exam_master 
-		WHERE id = '$exam_id'
-		";
-		$result = $this->get_result();
-		$data = array();
-		foreach($result as $row)
-		{
-			
-
-		    if($row['exam_category']==1 ){
-				$tbl_program = "tbl_program_master";
-			}else{
-				$tbl_program = "tbl_mid_program_master";
-			}
-            
-			$this->query = "
-				SELECT syllabus_id FROM $tbl_program
-				WHERE id = '".$row['program_id']."'
-				";
-				$result2 = $this->get_result();
-                foreach($result2 as $row2)
-		        {
-                     $data[] = $row2['syllabus_id'];
-					 $data[] = $row['paper_id'];
-				}
-		}
-
-		return $data;
 	}
 
 	function Can_add_question_in_this_subject($exam_subject_id)
@@ -503,45 +445,39 @@ class database
 		}
 	}
 
-	function Get_total_Question()
+	function Get_total_subject()
 	{
 		$this->query = "
-		  SELECT s.descr,COUNT(q.syllabus_id) as question FROM `tbl_sylabus_master` s 
-          JOIN `exam_subject_question` q ON s.id = q.syllabus_id
-          GROUP BY q.syllabus_id;
+		SELECT COUNT(subject_id) as Total 
+		FROM subject_soes 
+		WHERE subject_status = 'Enable'
 		";
 		$result = $this->get_result();
-		$res = array();
 		foreach($result as $row)
 		{
-			$res[]= $row;
+			return $row["Total"];
 		}
-		return json_encode($res) ;
 	}
 
 	function Get_total_student()
 	{
 		$this->query = "
-		    SELECT p.prg_name,COUNT(n.id) as no_trainee FROM `tbl_program_master` p 
-            JOIN `tbl_new_recruite` n ON p.id = n.program_id 
-            WHERE n.mdrafm_status = 1 AND p.status = 'approve' GROUP BY n.program_id
+		SELECT COUNT(student_id) as Total 
+		FROM student_soes 
+		WHERE student_status = 'Enable'
 		";
-		 $result = $this->get_result();
-		   $res = array();
+		$result = $this->get_result();
 		foreach($result as $row)
 		{
-			//print_r( $row);
-			$res[]= $row;
-			
+			return $row["Total"];
 		}
-		return json_encode($res) ;
 	}
 
 	function Get_total_exam()
 	{
 		$this->query = "
-		SELECT COUNT(id) as Total 
-		FROM tbl_exam_master WHERE status >3
+		SELECT COUNT(exam_id) as Total 
+		FROM exam_soes 
 		";
 		$result = $this->get_result();
 		foreach($result as $row)
@@ -564,46 +500,9 @@ class database
 		}
 	}
 
-	function Get_program($tbl,$program_id)
-	{
-		$this->query = "SELECT prg_name  FROM `$tbl` WHERE id = $program_id";
-
-		$result = $this->get_result();
-		
-		foreach($result as $row)
-		{
-			return $row["prg_name"];
-		}
-	}
-	function Get_term_name($tbl,$term_id)
-	{
-		$this->query = "SELECT term  FROM `$tbl` WHERE id = $term_id";
-		
-		$result = $this->get_result();
-		
-		foreach($result as $row)
-		{
-			return $row["term"];
-		}
-	}
-
-	function Get_paper_name($tbl,$paper_id)
-	{
-		$this->query = "SELECT paper_code  FROM `$tbl` WHERE id = $paper_id";
-		
-		$result = $this->get_result();
-		
-		foreach($result as $row)
-		{
-			return $row["paper_code"];
-		}
-	}
-
-
-
 	// function if_table_exists()
 	// {
-	// 	$this->query = " 
+	// 	$this->query = "
 	// 	SHOW TABLES
 	// 	";
 

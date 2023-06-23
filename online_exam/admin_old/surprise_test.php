@@ -108,13 +108,6 @@ include('header.php');
                             }
                             if($exam_row['status'] == 4)
                             {
-                                $action_button = '
-                                <div  align="center">
-                                <button type="button" name="edit_button" class="btn btn-warning btn-circle btn-sm edit_button" data-id="'.$exam_row["id"].'"><i class="fas fa-edit"></i></button>
-                                <button type="button" name="delete_button" class="btn btn-danger btn-circle btn-sm delete_button" data-id="'.$exam_row["id"].'"><i class="fas fa-times"></i></button>
-                                
-                                </div>
-                                ';
                                 $status = '<span class="badge badge-warning">Approved</span>';
                                
                             }

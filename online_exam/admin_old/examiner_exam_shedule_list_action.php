@@ -14,17 +14,10 @@ if(isset($_POST["action"]))
 
 		$output = array();
 
-        // $object->query = "SELECT m.id,m.trng_type,m.program_id FROM `tbl_trainee_exam_info` i 
-        // JOIN `tbl_exam_master` m ON m.id = i.exam_id 
-        // WHERE i.trainee_id ='".$_SESSION['user_id']."' AND m.status != 6";
-        
-        // $exam_lists = $object->get_result();
-        // foreach($exam_lists as $exam_list){
-
-        // }
 		 $main_query = "
-         SELECT m.id,m.exam_title,m.paper_id,i.exam_date_time,i.exam_duration,m.total_question,m.status,m.trng_type,i.exam_status
+         SELECT m.id,m.exam_title,i.exam_date_time,i.exam_duration,m.total_question,m.status,p.paper_code,p.title as paper_title ,i.exam_status
         FROM `tbl_exam_master` m 
+        JOIN `tbl_paper_master` p ON m.paper_id = p.id
         JOIN `tbl_trainee_exam_info` i ON m.id = i.exam_id
         WHERE i.trainee_id = '".$_SESSION['user_id']."'" ;
 
@@ -75,18 +68,11 @@ if(isset($_POST["action"]))
      //print_r($result);
 
 		foreach($result as $row)
-		{   
-            
+		{
 			$sub_array = array();
 			$sub_array[] = html_entity_decode($row["exam_title"]);
-
-			//$sub_array[] = html_entity_decode($row["paper_code"]);
-			if($row["trng_type"] == 3){
-                $sub_array[] = html_entity_decode( $object->Get_paper_name("tbl_mid_paper_master",$row["paper_id"]));
-            }else{
-                $sub_array[] = html_entity_decode( $object->Get_paper_name("tbl_paper_master",$row["paper_id"]));
-            }
-
+			$sub_array[] = html_entity_decode($row["paper_code"]);
+			
 			$sub_array[] = $row['exam_date_time'];
 			$sub_array[] = $row['exam_duration'].' Minutes';
 			$sub_array[] = $row['total_question'].' Qustions';
@@ -171,7 +157,7 @@ if(isset($_POST["action"]))
         $secret_code = $_POST["secret_code"];
 //exit;
         
-        $object->query = "SELECT i.*,m.exam_code,m.trng_type FROM `tbl_trainee_exam_info` i JOIN `tbl_exam_master` m ON i.exam_id = m.id 
+        $object->query = "SELECT i.*,m.exam_code FROM `tbl_trainee_exam_info` i JOIN `tbl_exam_master` m ON i.exam_id = m.id 
         WHERE m.id = '".$exam_id."' AND i.trainee_id = ".$user_id;
 
        $object->execute();
@@ -192,7 +178,6 @@ if(isset($_POST["action"]))
             //$url = $object->base_url . 'admin/start_online_exam.php';
             $url = $object->base_url . 'admin/before_start_exam.php';
             $_SESSION['exam_id'] = $exam_id;
-            $_SESSION['trng_type'] = $row['trng_type'];
         }
         
         $output = array(

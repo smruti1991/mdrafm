@@ -36,6 +36,7 @@ include('header.php');
                     <tr>
                         <th>Exam Name</th>
                         <th>Program Name</th>
+                        <th>Term Name</th>
                         <th>Paper Name</th>
                         <th>Exam Date & Time</th>
                         <th>Exam Duration</th>
@@ -136,7 +137,7 @@ var dataTable = $('#exam_table').DataTable({
             "serverMethod":'post',
             "order" : [],
             "ajax" : {
-                url:"examiner_surprise_exam_list_action.php",
+                url:"examiner_exam_list_action.php",
                 type:"POST",
                 data:{action:'fetch'}
             },
@@ -147,13 +148,13 @@ var dataTable = $('#exam_table').DataTable({
                 },
             ],
         });
-function setQuestion(exam_id,program_id,trng_type){
+function setQuestion(exam_id,program_id){
 //alert(exam_id);
 
    $.ajax({
-       url:"examiner_surprise_exam_list_action.php",
+       url:"examiner_exam_list_action.php",
        method:"POST",
-       data:{"action":'set_question',exam_id:exam_id,program_id:program_id,trng_type:trng_type},
+       data:{"action":'set_question',exam_id:exam_id,program_id:program_id},
        beforeSend:function()
             {
                 $('#set_qstn').attr('disabled', 'disabled');
@@ -209,17 +210,16 @@ function save_modify_exam_time(exam_id,program_id){
    })
 }
 
-function takeAttendance(exam_id,program_id,trng_type){
+function takeAttendance(exam_id,program_id){
     $('.modal-footer').html('');
 
     $.ajax({
         type: 'POST',
-        url: "examiner_surprise_exam_list_action.php",
+        url: "examiner_exam_list_action.php",
         data: {
             action: "trainee_atn",
             exam_id: exam_id,
-            program_id: program_id,
-            trng_type:trng_type
+            program_id: program_id
             
         },
         success: function(res) {
@@ -263,7 +263,7 @@ TableData = JSON.stringify(TableData);
 //console.log(storeTblValues());
 
 $.ajax({
-    url: 'examiner_surprise_exam_list_action.php',
+    url: 'examiner_exam_list_action.php',
     type: "POST",
     data: {
         'action':'save_attandance',

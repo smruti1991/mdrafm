@@ -36,7 +36,7 @@ if(isset($_POST["action"]))
 		$output = array();
 
 		 $main_query = "
-				SELECT $sub_select FROM `surprise_test_question` q 
+				SELECT $sub_select FROM `exam_subject_question` q 
 				JOIN `tbl_sylabus_master` s ON q.syllabus_id= s.id
 				$sub_query
 				".$where_query;
@@ -94,10 +94,10 @@ if(isset($_POST["action"]))
 			
 			$sub_array[] = html_entity_decode($row["paper_code"]);
 			$sub_array[] = $row["exam_subject_question_title"];
-			$sub_array[] = $object->Get_surprise_question_option_data($row['exam_subject_question_id'], 1);
-			$sub_array[] = $object->Get_surprise_question_option_data($row['exam_subject_question_id'], 2);
-			$sub_array[] = $object->Get_surprise_question_option_data($row['exam_subject_question_id'], 3);
-			$sub_array[] = $object->Get_surprise_question_option_data($row['exam_subject_question_id'], 4);
+			$sub_array[] = $object->Get_question_option_data($row['exam_subject_question_id'], 1);
+			$sub_array[] = $object->Get_question_option_data($row['exam_subject_question_id'], 2);
+			$sub_array[] = $object->Get_question_option_data($row['exam_subject_question_id'], 3);
+			$sub_array[] = $object->Get_question_option_data($row['exam_subject_question_id'], 4);
 			$sub_array[] = $row["exam_subject_question_answer"] . ' Option';
 
 			$sub_array[] = '
@@ -165,7 +165,7 @@ if(isset($_POST["action"]))
 			':exam_subject_question_title'	=>	$_POST["exam_subject_question_title"],
 			':exam_subject_question_answer'	=>	$_POST["exam_subject_question_answer"]
 		);
- 
+
 		$object->query = "
 		INSERT INTO surprise_test_question 
 		(exam_id,syllabus_id, term_id, paper_id, exam_subject_question_title, exam_subject_question_answer) 
@@ -175,8 +175,7 @@ if(isset($_POST["action"]))
 		$object->execute($data);
 
 	  	$exam_subject_question_id = $object->connect->lastInsertId();
-		// echo  $exam_subject_question_id;
-		// exit;
+
 		for($count = 1; $count <= 4; $count++)
 		{
 			//echo $count; 

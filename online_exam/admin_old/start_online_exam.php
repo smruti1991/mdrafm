@@ -30,7 +30,7 @@ $student_roll_no = '';
 $student_image = '';
 $prg_name = '';
 $trainee_exam_info_id = '';
-print_r($_SESSION);
+
 if(isset($_SESSION['exam_id'])){
 
     $object->query = "
@@ -41,18 +41,7 @@ if(isset($_SESSION['exam_id'])){
 
 
      $object->execute();
-if($_SESSION['trng_type'] == 3){
-    $object->query = "
-    SELECT m.id,m.exam_title,p.paper_code as paper,pm.prg_name,m.total_question,
-    m.marks_per_right_answer,m.marks_per_wrong_answer,m.status,i.id as trainee_info_id,i.exam_date_time,i.exam_duration
-    FROM `tbl_exam_master` m 
-    JOIN `tbl_mid_paper_master` p ON m.paper_id = p.id
-    JOIN `tbl_mid_program_master` pm ON m.program_id = pm.id
-    JOIN `tbl_trainee_exam_info` i ON m.id = i.exam_id
 
-    WHERE m.id =  '".$_SESSION['exam_id']."' AND i.trainee_id =  '".$_SESSION['user_id']."'
-    ";
-}else{
     $object->query = "
     SELECT m.id,m.exam_title,CONCAT(p.paper_code,' - ',p.title) as paper,pm.prg_name,m.total_question,
     m.marks_per_right_answer,m.marks_per_wrong_answer,m.status,i.id as trainee_info_id,i.exam_date_time,i.exam_duration,d.photo 
@@ -64,8 +53,6 @@ if($_SESSION['trng_type'] == 3){
 
     WHERE m.id =  '".$_SESSION['exam_id']."' AND i.trainee_id =  '".$_SESSION['user_id']."'
     ";
-}
-    
 
     $result = $object->get_result();
 
@@ -76,15 +63,7 @@ if($_SESSION['trng_type'] == 3){
         $total_question = $row["total_question"];
         $paper = $row["paper"];
         $prg_name = $row["prg_name"];
-        if($_SESSION['trng_type'] == 3){
-            if(isset($row["photo"])){
-                $student_image = $row["photo"];
-            }
-            
-        }else{
-            $student_image = '';
-        }
-       
+        $student_image = $row["photo"];
         $exam_duration = $row["exam_duration"];
         $marks_per_right_answer =  $row["exam_duration"];
         $trainee_exam_info_id = $row["trainee_info_id"];
@@ -171,16 +150,10 @@ if($_SESSION['trng_type'] == 3){
 $(document).ready(function() {
     var exam_id = "<?php echo $exam_id; ?>";
     var trainee_exam_info_id = "<?php echo $trainee_exam_info_id; ?>";
-    let trng_type = "<?php echo $_SESSION['trng_type']; ?>";
-    let page_url = '';
-    if(trng_type == 3){
-        page_url ="start_surprise_exam_action.php";
-    }else{
-        page_url ="../ajax_action.php";
-    }
+
     function load_question(question_id = '', exam_id, trainee_exam_info_id) {
         $.ajax({
-            url: page_url,
+            url: "../ajax_action.php",
             method: "POST",
             data: {
                 exam_id: exam_id,

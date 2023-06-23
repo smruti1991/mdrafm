@@ -61,30 +61,23 @@ include('header.php');
                 <tbody>
                     <?php
                         $object->query = "
-                        SELECT  m.id,m.exam_title, f.name as faculty_name, m.trng_type,m.program_id,m.term_id,m.paper_id, 
-		                m.exam_date_time,m.exam_duration,m.total_question,
+                        SELECT  m.id,m.exam_title, f.name as faculty_name, p.prg_name as program_name, 
+		                t.term, pm.paper_code,m.exam_date_time,m.exam_duration,m.total_question,
                         m.marks_per_right_answer,m.marks_per_wrong_answer,m.status,m.exam_code FROM `tbl_exam_master` m 
                         JOIN `tbl_faculty_master` f ON m.examiner_id = f.id
+                        JOIN `tbl_program_master` p ON m.program_id = p.id
+                        JOIN `tbl_term_master` t ON m.term_id = t.id
+                        JOIN `tbl_paper_master` pm ON m.paper_id = pm.id
 
-                        WHERE m.exam_category =3
+                        WHERE m.exam_category =1
                         ";
                         
                         $res_data = $object->get_result();
-                       
+                        
                         foreach ($res_data as $exam_row) {
                            // print_r($exam_row);
                             $status = '';
 			                $action_button = '';
-
-                            if($exam_row['trng_type'] == 1){
-                                $prog_table = "tbl_program_master";
-                                $paper_table = "tbl_paper_master";
-                              
-                            }else{
-                                $prog_table = "tbl_mid_program_master";
-                                $paper_table = "tbl_mid_paper_master";
-                            }
-
                             if($exam_row['status'] == 1 )
                             {
                                
@@ -108,13 +101,6 @@ include('header.php');
                             }
                             if($exam_row['status'] == 4)
                             {
-                                $action_button = '
-                                <div  align="center">
-                                <button type="button" name="edit_button" class="btn btn-warning btn-circle btn-sm edit_button" data-id="'.$exam_row["id"].'"><i class="fas fa-edit"></i></button>
-                                <button type="button" name="delete_button" class="btn btn-danger btn-circle btn-sm delete_button" data-id="'.$exam_row["id"].'"><i class="fas fa-times"></i></button>
-                                
-                                </div>
-                                ';
                                 $status = '<span class="badge badge-warning">Approved</span>';
                                
                             }
@@ -128,28 +114,9 @@ include('header.php');
                              <tr>
                                 <td><?php echo $exam_row['exam_title']; ?></td>
                                 <td><?php echo $exam_row['faculty_name']; ?></td>
-                                <td>
-                                    <?php 
-                                        echo  $object-> Get_program($prog_table,$exam_row['program_id']);
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php 
-                                     if($exam_row['trng_type'] == 1){
-                                       
-                                        echo  $object-> Get_term_name('tbl_term_master',$exam_row['term']);
-                                     }else{
-                                        echo "not available";
-                                     }
-                                       
-                                     ?>
-                                </td>
-                                <td>
-                                    <?php 
-                                    
-                                    echo  $object-> Get_paper_name($paper_table,$exam_row['paper_id']);
-                                    ?>
-                                </td>
+                                <td><?php echo $exam_row['program_name']; ?></td>
+                                <td><?php echo $exam_row['term']; ?></td>
+                                <td><?php echo $exam_row['paper_code']; ?></td>
                                 <td><?php echo $exam_row['exam_date_time']; ?></td>
                                 <td><?php echo $exam_row['exam_duration'].' Minutes'; ?></td>
                                 <td><?php echo $exam_row['total_question'].' Qustions'; ?></td>
@@ -175,7 +142,7 @@ include('footer.php');
 
 <div id="examModal" class="modal fade">
     <div class="modal-dialog">
-        <form method="post" id="surprise_exam_form">
+        <form method="post" id="exam_form">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modal_title">Add Exam Data</h4>
@@ -186,60 +153,6 @@ include('footer.php');
                     <div class="form-group">
                         <label>Exam Name</label>
                         <input type="text" name="exam_title" id="exam_title" class="form-control" required data-parsley-pattern="/^[a-zA-Z0-9 \s]+$/" data-parsley-trigger="keyup" />
-                    </div>
-                    <div class="form-group">
-                        <label>Programme Type</label>
-                        <select name="trng_type" id="program_type" class="form-control" required>
-                            <option value="">Select Programme Type</option>
-                            <option value="1">Long Term</option>
-                            <option value="3">Mid Term</option>
-                           
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Programme</label>
-                        <select name="program_id" id="program_id" class="form-control" required>
-                            <option value="">Select Programme</option>
-                            
-                        </select>
-                    </div>
-                    <div class="form-group" id="term_div">
-                        <label>Term</label>
-                        <select name="term_id" id="term_id" class="form-control">
-                            <option value="">Select Term</option>
-                            <?php
-                            $object->query = "
-                            SELECT * FROM tbl_term_master 
-                            ";
-                            
-                            $res2 = $object->get_result();
-
-                            foreach ($res2 as $row2) {
-                                echo '
-                                <option value="' . $row2["id"] . '">' . $row2["term"] . '</option>
-                                ';
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Paper</label>
-                        <select name="paper_id" id="paper_id" class="form-control" required>
-                            <option value="">Select Paper</option>
-                            <?php
-                            // $object->query = "
-                            // SELECT * FROM tbl_paper_master 
-                            // ";
-                            
-                            // $res3 = $object->get_result();
-
-                            // foreach ($res3 as $row3) {
-                            //     echo '
-                            //     <option value="' . $row3["id"] . '">' . $row3["paper_code"] . '</option>
-                            //     ';
-                            // }
-                            ?>
-                        </select>
                     </div>
                     <div class="form-group">
                         <label>Examiner 1</label>
@@ -279,7 +192,57 @@ include('footer.php');
                             ?>
                         </select>
                     </div>
-                    
+                    <div class="form-group">
+                        <label>Programme</label>
+                        <select name="program_id" id="program_id" class="form-control" required>
+                            <option value="">Select Programme</option>
+                            <?php
+                            foreach ($result as $row) {
+                                echo '
+                                <option value="' . $row["id"] . '">' . $row["prg_name"] . '</option>
+                                ';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Term</label>
+                        <select name="term_id" id="term_id" class="form-control" required>
+                            <option value="">Select Term</option>
+                            <?php
+                            $object->query = "
+                            SELECT * FROM tbl_term_master 
+                            ";
+                            
+                            $res2 = $object->get_result();
+
+                            foreach ($res2 as $row2) {
+                                echo '
+                                <option value="' . $row2["id"] . '">' . $row2["term"] . '</option>
+                                ';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Paper</label>
+                        <select name="paper_id" id="paper_id" class="form-control" required>
+                            <option value="">Select Paper</option>
+                            <?php
+                            $object->query = "
+                            SELECT * FROM tbl_paper_master 
+                            ";
+                            
+                            $res3 = $object->get_result();
+
+                            foreach ($res3 as $row3) {
+                                echo '
+                                <option value="' . $row3["id"] . '">' . $row3["paper_code"] . '</option>
+                                ';
+                            }
+                            ?>
+                        </select>
+                    </div>
                     <!-- <div class="form-group">
                         <label>Exam Date</label>
                         <input type="Date" name="exam_date" id="exam_date" class="form-control" required />
@@ -346,7 +309,7 @@ include('footer.php');
                 <div class="modal-footer">
                     <input type="hidden" name="hidden_id" id="hidden_id" />
                     <input type="hidden" name="action" id="action" value="Add" />
-                    <input type="hidden" name="exam_category" value="3" />
+                    <input type="hidden" name="exam_category" id="action" value="1" />
                     <input type="submit" name="submit" id="submit_button" class="btn btn-success" value="Add" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -417,62 +380,22 @@ include('footer.php');
             format: 'yyyy-mm-dd hh:ii',
             autoclose: true
         });
-        $('#program_type').change(function(){
-            const program_type = $(this).val();
 
+        $('#program_id').change(function() {
+            var program_id = $(this).val();
             $.ajax({
                 type: "POST",
-                url: "surprise_test_action.php",
-
-                data: {
-                    program_type: program_type,
-                    action: "select_programme"
-                },
-                success: function(res) {
-                    console.log(res);
-                    $('#program_id').html(res);
-                }
-            })
-
-        })
-        $('#program_id').change(function() {
-            const program_id = $(this).val();
-            const program_type = $('#program_type').val();
-            if (program_type == 1){
-                $('#term_div').show();
-
-                    $.ajax({
-                    type: "POST",
-                    url: "surprise_test_action.php",
-
-                    data: {
-                        program_id: program_id,
-                        action: "select_term"
-                    },
-                    success: function(res) {
-                        console.log(res);
-                        $('#term_id').html(res);
-                    }
-                })
-            }else{
-               
-                $('#term_div').hide();
-
-                $.ajax({
-                type: "POST",
-                url: "surprise_test_action.php",
+                url: "exam_action.php",
 
                 data: {
                     program_id: program_id,
-                    action: "select_mid_paper"
+                    action: "select_term"
                 },
                 success: function(res) {
                     console.log(res);
-                    $('#paper_id').html(res);
+                    $('#term_id').html(res);
                 }
             })
-            }
-            
         })
         $('#term_id').change(function() {
             var term_id = $(this).val();
@@ -492,10 +415,10 @@ include('footer.php');
         })
 
         $('#add_exam').click(function() {
-          
-            $('#surprise_exam_form')[0].reset();
 
-            $('#surprise_exam_form').parsley().reset();
+            $('#exam_form')[0].reset();
+
+            $('#exam_form').parsley().reset();
 
             $('#modal_title').text('Add Exam Data');
 
@@ -513,14 +436,13 @@ include('footer.php');
 
         });
 
-        $('#surprise_exam_form').parsley();
+        $('#exam_form').parsley();
 
-        $('#surprise_exam_form').on('submit', function(event) {
+        $('#exam_form').on('submit', function(event) {
             event.preventDefault();
-            console.log('Please');
             if ($('#examModal').parsley().isValid()) {
                 $.ajax({
-                    url: "surprise_test_action.php",
+                    url: "exam_action.php",
                     method: "POST",
                     data: $(this).serialize(),
                     dataType: 'json',
@@ -555,7 +477,7 @@ include('footer.php');
 
             var exam_id = $(this).data('id');
 
-            $('#surprise_exam_form').parsley().reset();
+            $('#exam_form').parsley().reset();
 
             $('#form_message').html('');
 
